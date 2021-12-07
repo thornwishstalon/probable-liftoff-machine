@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-12-07T16:43:36.228Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.55 Safari/537.36" etag="Kay1Us6_xEZ-6cGhKvU2" version="15.9.1" type="github">
+<mxfile host="app.diagrams.net" modified="2021-12-07T17:27:26.447Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.55 Safari/537.36" etag="yZBqLKJSMYX3sdZq6ah8" version="15.9.1" type="github">
   <diagram name="Page-1" id="7e0a89b8-554c-2b80-1dc8-d5c74ca68de4">
     <mxGraphModel dx="1426" dy="921" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="none" math="0" shadow="0">
       <root>
@@ -99,6 +99,166 @@
         </mxCell>
         <mxCell id="QarRgX-WC281lnmm7hLO-51" value="GPIO2 ESP8266" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="510" y="485" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-53" value="" style="verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;strokeWidth=1;shape=ellipse;perimeter=ellipsePerimeter;" vertex="1" parent="1">
+          <mxGeometry x="920" y="177.5" width="15" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-54" value="" style="verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;strokeWidth=1;shape=ellipse;perimeter=ellipsePerimeter;" vertex="1" parent="1">
+          <mxGeometry x="920" y="315" width="15" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-55" value="GPIO16 ESP8266" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="960" y="307.5" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-56" value="GND ESP8266" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="960" y="170" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-57" value="" style="pointerEvents=1;verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;shape=mxgraph.electrical.resistors.resistor_1;" vertex="1" parent="1">
+          <mxGeometry x="770" y="175" width="90" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-58" value="" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="QarRgX-WC281lnmm7hLO-60" target="QarRgX-WC281lnmm7hLO-54">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="970" y="487.5" as="sourcePoint" />
+            <mxPoint x="1020" y="437.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-59" value="" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="QarRgX-WC281lnmm7hLO-60" target="QarRgX-WC281lnmm7hLO-57">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="770" y="577.5" as="sourcePoint" />
+            <mxPoint x="720" y="195" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-60" value="" style="pointerEvents=1;fillColor=strokeColor;verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;shape=mxgraph.electrical.diodes.diode;" vertex="1" parent="1">
+          <mxGeometry x="770" y="292.5" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-61" value="" style="verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;strokeWidth=1;shape=ellipse;perimeter=ellipsePerimeter;" vertex="1" parent="1">
+          <mxGeometry x="920" y="390" width="15" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-62" value="" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="QarRgX-WC281lnmm7hLO-63" target="QarRgX-WC281lnmm7hLO-61">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="970" y="562.5" as="sourcePoint" />
+            <mxPoint x="1020" y="512.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-63" value="" style="pointerEvents=1;fillColor=strokeColor;verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;shape=mxgraph.electrical.diodes.diode;" vertex="1" parent="1">
+          <mxGeometry x="770" y="367.5" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-64" value="" style="verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;strokeWidth=1;shape=ellipse;perimeter=ellipsePerimeter;" vertex="1" parent="1">
+          <mxGeometry x="920" y="470" width="15" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-65" value="" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="QarRgX-WC281lnmm7hLO-66" target="QarRgX-WC281lnmm7hLO-64">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="970" y="642.5" as="sourcePoint" />
+            <mxPoint x="1020" y="592.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-66" value="" style="pointerEvents=1;fillColor=strokeColor;verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;shape=mxgraph.electrical.diodes.diode;" vertex="1" parent="1">
+          <mxGeometry x="770" y="447.5" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-67" value="" style="verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;strokeWidth=1;shape=ellipse;perimeter=ellipsePerimeter;" vertex="1" parent="1">
+          <mxGeometry x="920" y="550" width="15" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-68" value="" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="QarRgX-WC281lnmm7hLO-69" target="QarRgX-WC281lnmm7hLO-67">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="970" y="722.5" as="sourcePoint" />
+            <mxPoint x="1020" y="672.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-69" value="" style="pointerEvents=1;fillColor=strokeColor;verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;shape=mxgraph.electrical.diodes.diode;" vertex="1" parent="1">
+          <mxGeometry x="770" y="527.5" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-70" value="" style="verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;strokeWidth=1;shape=ellipse;perimeter=ellipsePerimeter;" vertex="1" parent="1">
+          <mxGeometry x="920" y="630" width="15" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-71" value="" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="QarRgX-WC281lnmm7hLO-72" target="QarRgX-WC281lnmm7hLO-70">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="970" y="802.5" as="sourcePoint" />
+            <mxPoint x="1020" y="752.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-72" value="" style="pointerEvents=1;fillColor=strokeColor;verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;shape=mxgraph.electrical.diodes.diode;" vertex="1" parent="1">
+          <mxGeometry x="770" y="607.5" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-73" value="" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" target="QarRgX-WC281lnmm7hLO-53">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="890" y="185" as="sourcePoint" />
+            <mxPoint x="1020" y="437.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-74" value="GPIO5 ESP8266" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="960" y="382.5" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-75" value="GPIO4 ESP8266" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="960" y="462.5" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-76" value="GPIO0 ESP8266" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="960" y="542.5" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-77" value="GPIO2 ESP8266" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="960" y="622.5" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-78" value="" style="pointerEvents=1;verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;shape=mxgraph.electrical.resistors.resistor_1;" vertex="1" parent="1">
+          <mxGeometry x="770" y="205" width="90" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-79" value="" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" target="QarRgX-WC281lnmm7hLO-78" source="QarRgX-WC281lnmm7hLO-63">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="780" y="352.5" as="sourcePoint" />
+            <mxPoint x="730" y="225" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="750" y="397.5" />
+              <mxPoint x="750" y="215.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-80" value="" style="pointerEvents=1;verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;shape=mxgraph.electrical.resistors.resistor_1;" vertex="1" parent="1">
+          <mxGeometry x="770" y="237.5" width="90" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-81" value="" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" target="QarRgX-WC281lnmm7hLO-80" source="QarRgX-WC281lnmm7hLO-66">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="770" y="440" as="sourcePoint" />
+            <mxPoint x="730" y="267.5" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="730" y="477.5" />
+              <mxPoint x="730" y="247.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-82" value="" style="pointerEvents=1;verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;shape=mxgraph.electrical.resistors.resistor_1;" vertex="1" parent="1">
+          <mxGeometry x="770" y="150" width="90" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-83" value="" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" target="QarRgX-WC281lnmm7hLO-82" source="QarRgX-WC281lnmm7hLO-69">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="770" y="390" as="sourcePoint" />
+            <mxPoint x="730" y="180" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="710" y="557.5" />
+              <mxPoint x="710" y="160.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-116" value="" style="pointerEvents=1;verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;shape=mxgraph.electrical.resistors.resistor_1;" vertex="1" parent="1">
+          <mxGeometry x="770" y="118.75" width="90" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-117" value="" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" target="QarRgX-WC281lnmm7hLO-116" source="QarRgX-WC281lnmm7hLO-72">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="770" y="526.25" as="sourcePoint" />
+            <mxPoint x="730" y="148.75" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="690" y="638" />
+              <mxPoint x="690" y="129" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-118" value="" style="endArrow=none;html=1;rounded=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="QarRgX-WC281lnmm7hLO-80" target="QarRgX-WC281lnmm7hLO-116">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="890" y="180" as="sourcePoint" />
+            <mxPoint x="570" y="470" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QarRgX-WC281lnmm7hLO-119" value="" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" target="QarRgX-WC281lnmm7hLO-53">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="860" y="185" as="sourcePoint" />
+            <mxPoint x="570" y="470" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
