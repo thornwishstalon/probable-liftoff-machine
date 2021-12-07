@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-12-07T16:30:44.276Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.55 Safari/537.36" etag="UAAeT-Mc4uN-Y8kxACCg" version="15.9.1" type="github">
+<mxfile host="app.diagrams.net" modified="2021-12-07T17:32:08.601Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.55 Safari/537.36" etag="wyWwL5TWNbFrQYt40okO" version="15.9.1" type="github">
   <diagram name="Page-1" id="7e0a89b8-554c-2b80-1dc8-d5c74ca68de4">
     <mxGraphModel dx="1426" dy="921" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="none" math="0" shadow="0">
       <root>
@@ -56,9 +56,9 @@
             <mxPoint x="280" y="190" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="W4vD0Bz4JJiFI6CvOiRV-14" value="" style="endArrow=none;html=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="W4vD0Bz4JJiFI6CvOiRV-11" target="W4vD0Bz4JJiFI6CvOiRV-2">
+        <mxCell id="W4vD0Bz4JJiFI6CvOiRV-14" value="" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="W4vD0Bz4JJiFI6CvOiRV-2">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="290" y="250" as="sourcePoint" />
+            <mxPoint x="390" y="388" as="sourcePoint" />
             <mxPoint x="200" y="310" as="targetPoint" />
             <Array as="points">
               <mxPoint x="163" y="388" />
@@ -94,6 +94,15 @@
         </mxCell>
         <mxCell id="W4vD0Bz4JJiFI6CvOiRV-21" value="Capacitor" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;rotation=-90;" vertex="1" parent="1">
           <mxGeometry x="190" y="259" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="W4vD0Bz4JJiFI6CvOiRV-22" value="" style="pointerEvents=1;verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;shape=mxgraph.electrical.miscellaneous.coaxial_jack_plug" vertex="1" parent="1">
+          <mxGeometry x="390" y="360" width="50" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="W4vD0Bz4JJiFI6CvOiRV-23" value="" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.25;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="W4vD0Bz4JJiFI6CvOiRV-22" target="W4vD0Bz4JJiFI6CvOiRV-11">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="520" y="670" as="sourcePoint" />
+            <mxPoint x="570" y="620" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
