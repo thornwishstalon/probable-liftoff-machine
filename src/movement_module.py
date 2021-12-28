@@ -12,7 +12,7 @@ class MovementModule(LiftoffModule):
 
     @property
     def routes(self):
-        return {b"/floor", self.floor}
+        return {b"/floor": self.floor}
 
     def floor(self):
         return {'current_floor': self.current_floor}
@@ -28,7 +28,7 @@ class MovementModule(LiftoffModule):
         # todo
         return []
 
-    def move(self, params):
+    def move(self, params, data):
         """do the 'moving'"""
         # todo: add code and trigger other events accordingly e.g.
         self.trigger_event(EVENT_POST_TRIP_START, {})
@@ -40,3 +40,4 @@ class MovementModule(LiftoffModule):
 
 module = MovementModule()
 module.start()
+

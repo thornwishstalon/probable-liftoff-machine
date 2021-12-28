@@ -1,5 +1,6 @@
 import uerrno
 import uio
+import ujson
 import uselect as select
 import usocket as socket
 
@@ -7,9 +8,9 @@ from collections import namedtuple
 from module.subscriber import SubscriberList
 
 WriteConn = namedtuple("WriteConn", ["body", "buff", "buffmv", "write_range"])
-ReqInfo = namedtuple("ReqInfo", ["type", "path", "params", "host"])
+ReqInfo = namedtuple("ReqInfo", ["type", "path", "headers", "params","data", "host"])
 
-from server import Server
+from module.server import Server
 
 import gc
 
@@ -40,7 +41,7 @@ def unquote(string):
     return b''.join(res)
 
 
-class HTTPServer(Server):
+class HTTPServer(Server, uio.IOBase):
     def __init__(self, poller, local_ip):
         super().__init__(poller, 80, socket.SOCK_STREAM, "HTTP Server")
         if type(local_ip) is bytes:
@@ -60,7 +61,9 @@ class HTTPServer(Server):
         self.subscriber = None
 
     def set_subscriber(self, subscriber: SubscriberList):
+        print("register subscriber")
         self.subscriber = subscriber
+        
 
     def set_ip(self, new_ip, new_ssid):
         """update settings after connected to local WiFi"""
@@ -69,10 +72,8 @@ class HTTPServer(Server):
         self.ssid = new_ssid
         self.routes = {b"/notify": self.notify}
 
-    def add_route(self, routes):
-        if self.routes:
-            for key, value in routes.items():
-                self.routes[key] = value
+    def add_route(self, key, value):
+        self.routes[key] = value
 
     @micropython.native
     def handle(self, sock, event, others):
@@ -102,11 +103,30 @@ class HTTPServer(Server):
         client_sock.setblocking(False)
         client_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.poller.register(client_sock, select.POLLIN)
-
+    
+    def parse_headers(self, req_lines):
+      headers = {}
+      line = 0
+      for l in req_lines:        
+          line += 1
+          if l == b"":
+              break
+          k, v = l.split(b":", 1)
+          headers[k] = v.strip()
+      body=b""
+      
+      print(line)
+      for i in range(line, len(req_lines)):
+          body += req_lines[i].strip()
+      return headers, body
+    
+    
     def parse_request(self, req):
         """parse a raw HTTP request to get items of interest"""
-
+        
         req_lines = req.split(b"\r\n")
+        headers, data = self.parse_headers(req_lines[1:])
+        print(headers)
         req_type, full_path, http_ver = req_lines[0].split(b" ")
         path = full_path.split(b"?")
         base_path = path[0]
@@ -119,15 +139,20 @@ class HTTPServer(Server):
             if query
             else {}
         )
+        if headers[b"Content-Type"] == b"application/json":
+          data = data.decode('UTF-8')
+          print(data)
+          data = ujson.loads(data)
+          print(data)
         host = [line.split(b": ")[1] for line in req_lines if b"Host:" in line][0]
+        
+        return ReqInfo(req_type, base_path, headers, query_params, data , host)
 
-        return ReqInfo(req_type, base_path, query_params, host)
-
-    def notify(self, params):
+    def notify(self, params, data=None):
         headers = b"HTTP/1.1 200 OK\r\n"
 
-        body = self.subscriber.notify(params)
-
+        body = self.subscriber.notify(params, data)
+        print(body)
         return body, headers
 
     def connected(self, params):
@@ -147,7 +172,7 @@ class HTTPServer(Server):
 
         if callable(route):
             # call a function, which may or may not return a response
-            response = route(req.params)
+            response = route(req.params, req.data)
             body = response[0] or b""
             headers = response[1] or headers
             return uio.BytesIO(body), headers
@@ -174,16 +199,17 @@ class HTTPServer(Server):
         # add new data to the full request
         sid = id(s)
         self.request[sid] = self.request.get(sid, b"") + data
-
+        print(data)
         # check if additional data expected
-        if data[-4:] != b"\r\n\r\n":
-            # HTTP request is not finished if no blank line at the end
-            # wait for next read event on this socket instead
-            return
+        #if data[-4:] != b"\r\n\r\n":
+        #    # HTTP request is not finished if no blank line at the end
+        #    # wait for next read event on this socket instead
+        #    return
 
         # get the completed request
         req = self.parse_request(self.request.pop(sid))
-
+        print(req)
+        
         if not self.is_valid_req(req):
             headers = (
                 b"HTTP/1.1 307 Temporary Redirect\r\n"
@@ -263,3 +289,5 @@ class HTTPServer(Server):
         if sid in self.conns:
             del self.conns[sid]
         gc.collect()
+
+

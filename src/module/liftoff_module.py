@@ -4,14 +4,14 @@ import ubinascii as binascii
 import urequests as urequests
 import uselect as select
 import utime as time
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 
 from module.http_server import HTTPServer
 from module.credentials import Creds
 from module.subscriber import SubscriberList
 
 
-class LiftoffModule(ABC):
+class LiftoffModule():
     AP_IP = "192.168.4.1"
     AP_OFF_DELAY = const(10 * 1000)
     MAX_CONN_ATTEMPTS = 10
@@ -124,11 +124,17 @@ class LiftoffModule(ABC):
 
     def liftoff(self):
         print("Starting Server")
-        self.start_access_point()
-
+        self.start_access_point()        
         if self.http_server is None:
             self.http_server = HTTPServer(self.poller, self.local_ip)
             print("Configured HTTP server")
+            for key, value in self.routes.items():
+              print('add module routes')
+              self.http_server.add_route(key,value)
+            print('add module subscriptions')
+            self.http_server.set_subscriber(self.subscriber)
+            print('register module subscriptions')
+            self.register_subscriber_at_bus(self.subscriber, self.part_of)
 
         try:
             while True:
@@ -140,10 +146,7 @@ class LiftoffModule(ABC):
 
                 if self.check_valid_wifi():
                     print("Connected to WiFi!")
-                    self.http_server.set_ip(self.local_ip, self.creds.ssid)
-                    self.http_server.add_route(self.routes)
-                    self.http_server.set_subscriber(self.subscriber)
-                    self.register_subscriber_at_bus(self.subscriber, self.part_of)
+                    self.http_server.set_ip(self.local_ip, self.creds.ssid)              
                     break
 
         except KeyboardInterrupt:
@@ -234,3 +237,5 @@ class LiftoffModule(ABC):
 
         for tag in part_of:
             self._contributes_for_event(tag)
+
+
