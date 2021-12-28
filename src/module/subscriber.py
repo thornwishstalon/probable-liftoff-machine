@@ -8,11 +8,19 @@ class SubscriberCallback:
 
 class SubscriberList:
 
-    def __init__(self):
+    def __init__(self, priority=100):
         self.subscriber_list = {}
-        self.priority = 100
+        # remote priority
+        self.priority = priority
 
     def register(self, event_tag, callback, priority=100):
+        """
+
+        :param event_tag:
+        :param callback:
+        :param priority: local priority
+        :return:
+        """
         if not self.subscriber_list[event_tag]:
             self.subscriber_list[event_tag] = []
 
