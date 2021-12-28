@@ -20,7 +20,7 @@ class MovementModule(LiftoffModule):
     @property
     def subscriber(self):
         subs = SubscriberList()
-        subs.register(EVENT_TRIP_READY, self.move)
+        subs.register(EVENT_TRIP_READY, self.move, 500)
         return subs
 
     @property
