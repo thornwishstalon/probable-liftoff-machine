@@ -39,4 +39,3 @@ class SubscriberList:
                 message.append(sub["callback"].notify(params=params, data=data))
 
             return message
-

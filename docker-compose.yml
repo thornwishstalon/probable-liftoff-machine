@@ -1,0 +1,9 @@
+version: '2'
+
+services:
+  apache:
+    image: 'bitnami/apache:latest'
+    ports:
+      - '8080:8080'
+    volumes:
+      - ./web:/app

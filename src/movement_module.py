@@ -40,4 +40,3 @@ class MovementModule(LiftoffModule):
 
 module = MovementModule()
 module.start()
-

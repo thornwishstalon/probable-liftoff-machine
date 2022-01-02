@@ -124,13 +124,13 @@ class LiftoffModule():
 
     def liftoff(self):
         print("Starting Server")
-        self.start_access_point()        
+        self.start_access_point()
         if self.http_server is None:
             self.http_server = HTTPServer(self.poller, self.local_ip)
             print("Configured HTTP server")
             for key, value in self.routes.items():
-              print('add module routes')
-              self.http_server.add_route(key,value)
+                print('add module routes')
+                self.http_server.add_route(key, value)
             print('add module subscriptions')
             self.http_server.set_subscriber(self.subscriber)
             print('register module subscriptions')
@@ -146,7 +146,7 @@ class LiftoffModule():
 
                 if self.check_valid_wifi():
                     print("Connected to WiFi!")
-                    self.http_server.set_ip(self.local_ip, self.creds.ssid)              
+                    self.http_server.set_ip(self.local_ip, self.creds.ssid)
                     break
 
         except KeyboardInterrupt:
@@ -237,5 +237,3 @@ class LiftoffModule():
 
         for tag in part_of:
             self._contributes_for_event(tag)
-
-

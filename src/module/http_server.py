@@ -6,13 +6,11 @@ import usocket as socket
 
 from collections import namedtuple
 from module.subscriber import SubscriberList
+from module.server import Server
+import gc
 
 WriteConn = namedtuple("WriteConn", ["body", "buff", "buffmv", "write_range"])
-ReqInfo = namedtuple("ReqInfo", ["type", "path", "headers", "params","data", "host"])
-
-from module.server import Server
-
-import gc
+ReqInfo = namedtuple("ReqInfo", ["type", "path", "headers", "params", "data", "host"])
 
 
 def unquote(string):
@@ -63,7 +61,6 @@ class HTTPServer(Server, uio.IOBase):
     def set_subscriber(self, subscriber: SubscriberList):
         print("register subscriber")
         self.subscriber = subscriber
-        
 
     def set_ip(self, new_ip, new_ssid):
         """update settings after connected to local WiFi"""
@@ -103,27 +100,26 @@ class HTTPServer(Server, uio.IOBase):
         client_sock.setblocking(False)
         client_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.poller.register(client_sock, select.POLLIN)
-    
+
     def parse_headers(self, req_lines):
-      headers = {}
-      line = 0
-      for l in req_lines:        
-          line += 1
-          if l == b"":
-              break
-          k, v = l.split(b":", 1)
-          headers[k] = v.strip()
-      body=b""
-      
-      print(line)
-      for i in range(line, len(req_lines)):
-          body += req_lines[i].strip()
-      return headers, body
-    
-    
+        headers = {}
+        line = 0
+        for l in req_lines:
+            line += 1
+            if l == b"":
+                break
+            k, v = l.split(b":", 1)
+            headers[k] = v.strip()
+        body = b""
+
+        print(line)
+        for i in range(line, len(req_lines)):
+            body += req_lines[i].strip()
+        return headers, body
+
     def parse_request(self, req):
         """parse a raw HTTP request to get items of interest"""
-        
+
         req_lines = req.split(b"\r\n")
         headers, data = self.parse_headers(req_lines[1:])
         print(headers)
@@ -140,13 +136,13 @@ class HTTPServer(Server, uio.IOBase):
             else {}
         )
         if headers[b"Content-Type"] == b"application/json":
-          data = data.decode('UTF-8')
-          print(data)
-          data = ujson.loads(data)
-          print(data)
+            data = data.decode('UTF-8')
+            print(data)
+            data = ujson.loads(data)
+            print(data)
         host = [line.split(b": ")[1] for line in req_lines if b"Host:" in line][0]
-        
-        return ReqInfo(req_type, base_path, headers, query_params, data , host)
+
+        return ReqInfo(req_type, base_path, headers, query_params, data, host)
 
     def notify(self, params, data=None):
         headers = b"HTTP/1.1 200 OK\r\n"
@@ -201,7 +197,7 @@ class HTTPServer(Server, uio.IOBase):
         self.request[sid] = self.request.get(sid, b"") + data
         print(data)
         # check if additional data expected
-        #if data[-4:] != b"\r\n\r\n":
+        # if data[-4:] != b"\r\n\r\n":
         #    # HTTP request is not finished if no blank line at the end
         #    # wait for next read event on this socket instead
         #    return
@@ -209,7 +205,7 @@ class HTTPServer(Server, uio.IOBase):
         # get the completed request
         req = self.parse_request(self.request.pop(sid))
         print(req)
-        
+
         if not self.is_valid_req(req):
             headers = (
                 b"HTTP/1.1 307 Temporary Redirect\r\n"
@@ -289,5 +285,3 @@ class HTTPServer(Server, uio.IOBase):
         if sid in self.conns:
             del self.conns[sid]
         gc.collect()
-
-
