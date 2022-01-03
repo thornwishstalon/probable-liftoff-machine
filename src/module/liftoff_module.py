@@ -7,7 +7,7 @@ import utime as time
 from abc import abstractmethod
 
 from module.http_server import HTTPServer
-from module.credentials import Creds
+from common.credentials import Creds
 from module.subscriber import SubscriberList
 
 

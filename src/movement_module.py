@@ -1,6 +1,6 @@
 from module.liftoff_module import LiftoffModule
 from module.subscriber import SubscriberList
-from module.event import EVENT_TRIP_READY, EVENT_POST_TRIP_START, EVENT_PRE_TRIP_END, EVENT_TRIP_END, \
+from common.event import EVENT_TRIP_READY, EVENT_POST_TRIP_START, EVENT_PRE_TRIP_END, EVENT_TRIP_END, \
     EVENT_POST_TRIP_END
 
 
@@ -28,7 +28,7 @@ class MovementModule(LiftoffModule):
         # todo
         return []
 
-    def move(self, params, data):
+    def move(self, data):
         """do the 'moving'"""
         # todo: add code and trigger other events accordingly e.g.
         self.trigger_event(EVENT_POST_TRIP_START, {})
