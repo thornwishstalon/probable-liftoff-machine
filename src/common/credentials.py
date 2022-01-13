@@ -1,31 +1,32 @@
 import uos
+import ujson
 
 
-class Creds:
-    CRED_FILE = "./wifi.creds"
+class Config:
+    CRED_FILE = "./config.creds"
 
-    def __init__(self, ssid=None, password=None):
+    def __init__(self, id,  ssid=None, password=None, mqtt_broker=None, broker_password=None):
         self.ssid = ssid
         self.password = password
-
-    def write(self):
-        """Write credentials to CRED_FILE if valid input found."""
-        if self.is_valid():
-            with open(self.CRED_FILE, "wb") as f:
-                f.write(b",".join([self.ssid, self.password]))
-            print("Wrote credentials to {:s}".format(self.CRED_FILE))
+        self.mqtt_broker = mqtt_broker
+        self.broker_password = broker_password
+        self.mqtt_id = id
 
     def load(self):
-
         try:
             with open(self.CRED_FILE, "rb") as f:
-                contents = f.read().split(b",")
-            print("Loaded WiFi credentials from {:s}".format(self.CRED_FILE))
-            if len(contents) == 2:
-                self.ssid, self.password = contents
+                config = ujson.loads(f.read())
+                if 'ssid' in config:
+                    self.ssid = config['ssid']
+                if 'password' in config:
+                    self.password = config['password']
+                if 'mqtt_broker' in config:
+                    self.mqtt_broker = config['mqtt_broker']
+                if 'broker_password' in config:
+                    self.broker_password = config['broker_password']
 
-            if not self.is_valid():
-                self.remove()
+            print("Loaded config from {:s}".format(self.CRED_FILE))
+
         except OSError:
             pass
 
@@ -37,6 +38,7 @@ class Creds:
         2. Set ssid and password to None
         """
         # print("Attempting to remove {}".format(self.CRED_FILE))
+        pass
         try:
             uos.remove(self.CRED_FILE)
         except OSError:
@@ -44,12 +46,6 @@ class Creds:
 
         self.ssid = self.password = None
 
-    def is_valid(self):
-        # Ensure the credentials are entered as bytes
-        if not isinstance(self.ssid, bytes):
-            return False
-        if not isinstance(self.password, bytes):
-            return False
-
+    def has_wifi(self):
         # Ensure credentials are not None or empty
         return all((self.ssid, self.password))

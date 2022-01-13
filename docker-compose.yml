@@ -7,3 +7,11 @@ services:
       - '8080:8080'
     volumes:
       - ./web:/app
+
+  mosquitto:
+    image: eclipse-mosquitto
+    volumes:
+      - ./docker/mqtt:/mosquitto/:rw
+    ports:
+      - 1883:1883
+      - 9001:9001

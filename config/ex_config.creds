@@ -1,0 +1,6 @@
+{
+  "ssid": "<ssid>",
+  "password": "<password>",
+  "mqtt_broker": "<broker>",
+  "broker_password": "<broker_password>",
+}
