@@ -6,6 +6,7 @@ class MQTTWrapper:
         self.id = id
         self.broker_address = broker_address
         self.callback = callback
+        self.counter = 0
 
     def initialize(self):
         port = 1883
@@ -28,12 +29,12 @@ class MQTTWrapper:
     def subscribe(self, topic):
         self.client.subscribe(topic)
 
-    # this needs to be handled by a timer!!!
-    def run(self, timer):
-        try:
-            self.client.check_msg()
-        except OSError as e:
-            print(e)
+    def run(self):
+        self.counter += 1
+        if self.counter % 10:
+          self.client.ping()
+          self.counter = 0 
+        self.client.check_msg()
 
 
 

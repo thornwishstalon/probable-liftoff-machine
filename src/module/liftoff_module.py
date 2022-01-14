@@ -32,6 +32,8 @@ class LiftoffModule():
         raise NotImplemented()
 
     def callback(self, topic, message):
+        print(topic)
+        print(message)
         self.subscriber.notify(topic, message)
 
     def connect_to_broker(self):
@@ -179,10 +181,15 @@ class LiftoffModule():
                 print(str(e))
                 print('Failed to connect to MQTT broker. Reconnecting...')
                 time.sleep(5)
-
+  
+    def run(self, timer):
+      try:
+        self.mqtt.run()
+      except OSError:
+        self.connect_to_broker()
 
     def cleanup(self):
-        gc.collect()
+      gc.collect()
     
     def stop(self):
       if self.mqtt:

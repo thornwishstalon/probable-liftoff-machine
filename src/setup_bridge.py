@@ -29,8 +29,11 @@ def setup_stuff(ssid: str, password: str):
     upip.install('micropython-uasyncio')
     upip.install('micropython-abc')
     upip.install('micropython-umqtt.simple')
+    upip.install('micropython-ulogging')
 
     kill_connection()
 
 
 setup_stuff('<ssid>', '<pw>')
+
+

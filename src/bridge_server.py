@@ -12,8 +12,9 @@ import socket
 class DataState:
     current_floor = 0
 
-    def update_current_floor(self, message):
-        self.current_floor = message
+    def update_current_floor(self, message):        
+        self.current_floor = int(message)
+        return True
 
 
 class BridgeServer(LiftoffModule):
@@ -54,12 +55,12 @@ module = BridgeServer(config,lcd=lcd)
 module.start()
 print('network setup done')
 
-#web = setup_bridge(module)
+web = setup_bridge(module)
 
 ###### TIMERS
-fetch_timer.init(period=1000, mode=Timer.PERIODIC, callback=module.mqtt.run)
+fetch_timer.init(period=1000, mode=Timer.PERIODIC, callback=module.run)
 
 ## run server
-#web.start()
+web.run(debug=True, host=module.host, port=80)
 
 
