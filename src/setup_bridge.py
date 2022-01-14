@@ -25,11 +25,15 @@ def setup_stuff(ssid: str, password: str):
     do_connect()
 
     import upip
+    upip.install('picoweb')
+    upip.install('micropython-uasyncio')
     upip.install('micropython-abc')
     upip.install('micropython-umqtt.simple')
+    upip.install('micropython-ulogging')
 
     kill_connection()
 
 
 setup_stuff('<ssid>', '<pw>')
+
 

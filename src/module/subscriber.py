@@ -1,10 +1,3 @@
-class SubscriberCallback:
-    def __init__(self, callback):
-        self.callback = callback
-
-    def notify(self, params, data):
-        return self.callback(params, data)
-
 
 class SubscriberList:
 
@@ -25,17 +18,18 @@ class SubscriberList:
             self.subscriber_list[event_tag] = []
 
         self.subscriber_list[event_tag].append(
-            {"priority": priority, "callback": SubscriberCallback(callback)}
+            {"priority": priority, "callback": callback}
         )
 
-    def notify(self, params, data):
-        print(params)
-        print(data)
-        event_tag = data['event_name']
-        if event_tag in self.subscriber_list.keys():
-            sorted_subs = sorted(self.subscriber_list[event_tag], key=lambda kv: kv.get('priority', 100))
-            message = []
+    def notify(self, topic, message):
+        if topic in self.subscriber_list.keys():
+            sorted_subs = sorted(self.subscriber_list[topic], key=lambda kv: kv.get('priority', 100))
+            messages = []
             for sub in sorted_subs:
-                message.append(sub["callback"].notify(params=params, data=data))
+                print(sub)
+                resp = sub['callback'](message)
+                messages.append(resp)
+            print(messages)
+            return messages
 
-            return message
+

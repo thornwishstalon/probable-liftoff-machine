@@ -1,0 +1,4 @@
+{
+  "mqtt_broker": "192.168.4.2",
+  "broker_password": "<broker_password>",
+}
