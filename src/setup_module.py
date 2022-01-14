@@ -26,8 +26,10 @@ def setup_stuff(ssid: str, password: str):
 
     import upip
     upip.install('micropython-abc')
+    upip.install('micropython-umqtt.simple')
 
     kill_connection()
 
 
 setup_stuff('<ssid>', '<pw>')
+

@@ -27,6 +27,8 @@ def setup_stuff(ssid: str, password: str):
     import upip
     upip.install('picoweb')
     upip.install('micropython-uasyncio')
+    upip.install('micropython-abc')
+    upip.install('micropython-umqtt.simple')
 
     kill_connection()
 

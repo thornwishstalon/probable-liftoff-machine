@@ -1,10 +1,9 @@
+
 import picoweb
 import ujson
 
-from bridge.bridge_server import BridgeServer
 
-
-def setup_bridge(bridge:BridgeServer) -> picoweb.WebApp:
+def setup_bridge(bridge) -> picoweb.WebApp:
     app = picoweb.WebApp(__name__)
 
     @app.route("/floor")
@@ -21,3 +20,6 @@ def setup_bridge(bridge:BridgeServer) -> picoweb.WebApp:
         yield from resp.awrite("ok")
 
     return app
+
+
+
