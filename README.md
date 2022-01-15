@@ -66,6 +66,12 @@ looks promising: http://mqtt-explorer.com/
   + connect with the machin that runs the mqtt broker to this wifi
   + now mqtt broker is available at `192.168.4.2`
   + ESP32's display should say: `mqtt ready`
+  + the webserver should be ready now
+    + http://192.168.4.1/floor should show 0 as current floor
+    + change the floor by publishing a new floor to `liftoff.update.floor`
+      + e.g. `$ mosquitto_pub -h localhost  -t liftoff.update.floor -m 1`
+    + now current floor should be 1
+  + et voilà 🎉
 
 
 
