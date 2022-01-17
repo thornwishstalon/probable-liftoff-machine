@@ -23,8 +23,8 @@ class LiftoffModule():
         
         self.conn_time_start = None
         #
-        
         self.host = None
+        self.mqtt = None
 
     @abstractmethod
     @property
@@ -172,19 +172,21 @@ class LiftoffModule():
         self.sta_if.active(False)
         if not self.try_connect_from_file():
             self.liftoff()
-            print("try connect to broker!")
-            while True:
-              try:
-                self.connect_to_broker()
-                break
-              except (MQTTException , OSError) as e:
-                print(str(e))
-                print('Failed to connect to MQTT broker. Reconnecting...')
-                time.sleep(5)
+            
+        print("try connect to broker!")
+        while True:
+          try:
+            self.connect_to_broker()
+            break
+          except (MQTTException , OSError) as e:
+            print(str(e))
+            print('Failed to connect to MQTT broker. Reconnecting...')
+            time.sleep(5)
   
     def run(self, timer):
       try:
-        self.mqtt.run()
+        if self.mqtt:
+          self.mqtt.run()
       except OSError:
         self.connect_to_broker()
 
@@ -194,6 +196,7 @@ class LiftoffModule():
     def stop(self):
       if self.mqtt:
         self.mqtt.disconnect()
+
 
 
 
