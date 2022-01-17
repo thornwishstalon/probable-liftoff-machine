@@ -111,6 +111,7 @@ module.start()
 def publish_state(timer):
   global module
   if module.mqtt:
+    # let's push the data from state() to the broker ;) => {'current_floor': self.current_floor}
     module.mqtt.publish(EVENT_MOVEMENT_STATE, ujson.dumps(module.state()))  
 
 ###### TIMERS
