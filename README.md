@@ -169,13 +169,14 @@ looks promising: http://mqtt-explorer.com/
 ### run the rest of the modules (movement, power or rfid)
 * run `setup_module.py` with proper wifi credentials
   * this will install all the dependencies 
-* copy all files from``module`` and  ``common``` modules to the board (create respective directories on the board!)
+* copy all files from``module`` and  `common` modules to the board (create respective directories on the board!)
 * create a config file (`config.creds`) at the root level of the board
+  * at least set the `ssid` and `mqtt_broker`!!! 
 * start the respective main file (e.g.: `movement_module.py`)
-  * the module will try to connect to defined wifi
-  * connect to the mqtt broker
-  * register all mqtt topics the module is interested in
-  * and starts a periodic push of state topics to the broker 
+  * the module will try to connect to defined wifi (from the `config.creds`file)
+  * then connect to the mqtt broker
+  * and register all mqtt topics the module is interested in
+  * and finally starts a periodic push of state topics to the broker - as part of a periodic timer function 
 + that's it
 
 ### config file aka config.creds
