@@ -2,14 +2,15 @@
 ## UbiComp WS 2021 - Group 10
 
 ## TODO 👋
-* check if station mode works when connect to an existing wifi
-  * relevant for modules connecting to the control-server
-* implement state machine for control server (and state update loop)
+* [x] check if station mode works when connect to an existing wifi   
+  * [x] relevant for modules connecting to the control-server
+  * [ ] wifi `password` should be optional! 
+* [ ] implement state machine for control server (and state update loop)
   * basically when to do what and wait for something 
-* implement modules:
+* [ ] implement modules:
   * callbacks & state etc
   * hardware
-* implement web UI
+* [ ] implement web UI
 
 ## module server
 props to https://github.com/anson-vandoren/esp8266-captive-portal for the wifi setup stuff
@@ -35,6 +36,96 @@ see `docker-compose.yml`
   * interacting with the system and getting information
 * commands can be issued directly publishing mqtt messages to certain topics
 
+### Liftoff Module Framework
+we have built a common codebase to be used for all parts of this project -> `src/module/liftoff_module.py`
+any class extending `LiftoffModule` will be capable to either create a wifi or connect to an existing, build a connection to a MQTT Broker and provide the means to react to MQTT topics or push topics themself.
+
+let's explain this modularity with the movement module: 
+
+```python
+from common.credentials import Config
+from module.liftoff_module import LiftoffModule
+from module.subscriber import SubscriberList
+from common.event import EVENT_MOVEMENT_STATE,EVENT_TRIP_READY,EVENT_POST_TRIP_START,EVENT_POST_TRIP_END
+import ubinascii
+from machine import Timer, unique_id
+import ujson
+import time
+
+class MovementModule(LiftoffModule):
+    
+    def __init__(self, config):
+        super().__init__(config)
+        self.current_floor = 0
+
+    def state(self):
+        return {'current_floor': self.current_floor}
+
+    # any module needs to implement the subscriber function! The subscriber list 
+    # is used to call callbacks if a message for the defined topic is received via mqtt 
+    @property   
+    def subscriber(self):
+        subs = SubscriberList()
+        # 
+        subs.register(
+            EVENT_TRIP_READY,   # topic name 
+            self.move,          # callback
+            500                 # callback priority, if multiple callbacks register to the same topic
+                                # priority is used to define the order in which they are called
+        )
+        # always return the Subscriber LIST!!!!
+        return subs
+
+    # the callback function, which will get executed when a message for EVENT_TRIP_READY is received
+    def move(self, message):
+        # push a new event
+        self.mqtt.publish(EVENT_POST_TRIP_START, b"0")
+        # do stuff
+        # here we just increase the current_floor by 1, we could also do something with the 'message' 
+        # (it's a byte string so be careful if you want to have numerical values!)
+        self.current_floor +=  1
+        # push another event after we did things
+        self.mqtt.publish(EVENT_POST_TRIP_END, b"0")
+        
+
+
+### timers
+# the fetch timer will be used to get waiting messages in the mqtt queue
+fetch_timer = Timer(0)
+
+# this timer will be used to push the current state of this module to whoever is interested
+measurement_timer = Timer(1)
+
+# the client id is used to identify this module at the mqtt broker
+client_id = ubinascii.hexlify(unique_id())
+# this will load config from the config.creds file!
+config = Config(client_id).load()
+
+module = MovementModule(config)
+# start() will create a new wifi or connect to an existing one depending on the wifi config in the creds-file
+# then a connection to the mqtt broker is created and we will subscribe to all topics listed 
+# in the module's subscribe function. in this example it's 'EVENT_TRIP_READY', which will get handled by move()
+module.start()
+
+# this timer callback will get used to just publish the current state to the broker every second.
+def publish_state(timer):
+  global module
+  if module.mqtt:
+    module.mqtt.publish(EVENT_MOVEMENT_STATE, ujson.dumps(module.state()))  
+
+###### TIMERS
+print('start mqtt queue')
+fetch_timer.init(period=1000, mode=Timer.PERIODIC, callback=module.run)
+time.sleep_ms(500)
+
+print('start update queue')
+measurement_timer.init(period=1000, mode=Timer.PERIODIC, callback=publish_state)
+
+## THE END
+```
+
+
+
 ### MQTT (https://mqtt.org/)
 #### install mosquitto on osx with homebrew
 `$ brew install mosquitto`
@@ -58,7 +149,7 @@ looks promising: http://mqtt-explorer.com/
 ### bridge aka the BRAIN @ESP32
 * run `setup_bridge.py` with proper wifi credentials
   * this will install all the dependencies 
-* copy all files from``module`` and `bridge` modules to the board (create respective directories on the board!)
+* copy all files from `module`, `common` and `bridge` modules to the board (create respective directories on the board!)
 * copy the config file (`config.creds`) from `/config/bride/` to the root level of the board
 * run `bridge_server.py`
   + this will start an access point with ssid `liftoff` 
@@ -72,11 +163,32 @@ looks promising: http://mqtt-explorer.com/
       + e.g. `$ mosquitto_pub -h localhost  -t liftoff.update.floor -m 1`
     + now current floor should be 1
   + et voilà 🎉
+  
 
+### run the rest of the modules (movement, power or rfid)
+* run `setup_module.py` with proper wifi credentials
+  * this will install all the dependencies 
+* copy all files from``module`` and  ``common``` modules to the board (create respective directories on the board!)
+* create a config file (`config.creds`) at the root level of the board
+* start the respective main file (e.g.: `movement_module.py`)
+  * the module will try to connect to defined wifi
+  * connect to the mqtt broker
+  * register all mqtt topics the module is interested in
+  * and starts a periodic push of state topics to the broker 
++ that's it
 
+### config file aka config.creds
 
-### run the rest
-... TODO
+the config file should look like this:
+```json
+{
+  "ssid": "liftoff",            # the ssid of the wifi you want to connect to 
+  "password": "<password>",     # [optional] the password for that wifi. can be optional if it's an open wifi
+  "mqtt_broker": "192.168.4.2", # the IP or host-name where the mqtt-broker is running 
+  "broker_password": "<pwd>",   # [optional] mqtt broker password
+}
+```
+`broker_password` is not used at the moment!
 
 
 ## web interface
