@@ -192,6 +192,21 @@ the config file should look like this:
 ```
 `broker_password` is not used at the moment!
 
+## KIBANA
+
+goto [http://localhost:5601](http://localhost:5601)
+
+```
+user: elastic
+password: changeme
+```
+you will be asked to create an index_pattern
+```
+logstash*
+```
+will be fine and select ``@timestamp`` as datetime thing.
+
+then go to Analytics/Discover and yeah! 
 
 ## web interface
 
