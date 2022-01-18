@@ -22,18 +22,31 @@ class BridgeStateMachine:
 
 
 class DataState:
+    state = BridgeStateMachine.READY 
     current_floor = 0
-    doors = 0
+    doors = 4
+    moving = False
 
     def update_current_floor(self, message):
         self.current_floor = int(message)
         return True
 
     def open_doors(self):
-        self.doors = 1
+      if self.doors < 4:
+        self.doors += 1
 
     def close_doors(self):
-        self.doors = 0
+        if self.doors > 0:
+          self.doors -= 1
+    
+    @property
+    def json(self):
+      return {
+        "state": self.state,
+        "current_floor": self.current_floor,
+        "doors": self.doors,
+        "moving": self.moving
+      }
 
 
 class BridgeServer(LiftoffModule):
@@ -42,43 +55,54 @@ class BridgeServer(LiftoffModule):
         super().__init__(config, lcd)
         self.data_state = DataState()
         self.schedule = TripSchedule()
-        self.state = BridgeStateMachine.READY
         self.transaction_code = ""
 
     def update_state(self, timer):
-        if self.state == BridgeStateMachine.READY:
+        
+        if self.data_state.state == BridgeStateMachine.READY:
             if self.schedule.has_trip_scheduled():
-                self.state = BridgeStateMachine.PREPARE_TRIP
+                self.data_state.state = BridgeStateMachine.PREPARE_TRIP
                 self.transaction_code = BridgeServer.generate_code()
 
-        elif self.state == BridgeStateMachine.PREPARE_TRIP:
-            if self.data_state.doors == 0:
-                self.mqtt.publish(EVENT_PRE_TRIP_START, EventPayload(self.transaction_code, {}).json)
-                self.data_state.close_doors()
-            else:
-                self.state = BridgeStateMachine.EXECUTE_TRIP
+        elif self.data_state.state == BridgeStateMachine.PREPARE_TRIP:
+            if self.data_state.doors == 4:
+              self.mqtt.publish(EVENT_PRE_TRIP_START, EventPayload(self.transaction_code, {}).json)
+              self.data_state.close_doors()
+            elif self.data_state.doors > 0:
+              self.data_state.close_doors()
+            elif self.data_state.doors == 0:
+              self.data_state.state = BridgeStateMachine.EXECUTE_TRIP
 
-        elif self.state == BridgeStateMachine.EXECUTE_TRIP:
+        elif self.data_state.state == BridgeStateMachine.EXECUTE_TRIP:
+          if not self.data_state.moving:
+            self.data_state.moving = True
             self.mqtt.publish(
                 EVENT_TRIP_START,
                 EventPayload(self.transaction_code,
                              {"next": self.schedule.pop_trip(self.data_state.current_floor)}).json
             )
 
-        elif self.state == BridgeStateMachine.FINISH_TRIP:
-            self.data_state.open_doors()
+        elif self.data_state.state == BridgeStateMachine.FINISH_TRIP:
+          if self.data_state.doors == 0:
             self.mqtt.publish(
                 EVENT_POST_TRIP_END,
                 EventPayload(self.transaction_code, {}).json
-            )
-            self.state = BridgeStateMachine.READY
+            )            
+            self.data_state.open_doors()
+          elif self.data_state.doors < 4:
+            self.data_state.open_doors()
+          elif self.data_state.doors == 4:
+            self.data_state.state = BridgeStateMachine.READY
+            self.data_state.moving = False
 
     @classmethod
     def generate_code(cls):
         return ''.join((urandom.choice(keys) for _ in range(8)))
 
-    def arrive(self):
-        self.state = BridgeStateMachine.FINISH_TRIP
+    def arrive(self, message):
+        print("arrived")
+        self.data_state.state = BridgeStateMachine.FINISH_TRIP
+        
 
     @property
     def subscriber(self):
@@ -124,3 +148,4 @@ state_timer.init(period=500, mode=Timer.PERIODIC, callback=module.update_state)
 
 ## run server
 web.run(debug=True, host=module.host, port=80)
+

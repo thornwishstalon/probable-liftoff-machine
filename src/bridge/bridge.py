@@ -27,9 +27,18 @@ def _require_parameters(elements, required):
 
 def setup_bridge(bridge) -> picoweb.WebApp:
     app = picoweb.WebApp(__name__)
+    
+    @app.route("/state")
+    def state(req, resp):
+        if req.method == "GET":
+            encoded = ujson.dumps( bridge.data_state.json )
+            yield from picoweb.start_response(resp, content_type="application/json")
+            yield from resp.awrite(encoded)
+        else:
+            yield from picoweb.http_error(resp, "405")
 
     @app.route("/floor")
-    def register(req, resp):
+    def floor(req, resp):
         if req.method == "GET":
             encoded = ujson.dumps({'current_floor': bridge.data_state.current_floor})
 
@@ -53,3 +62,4 @@ def setup_bridge(bridge) -> picoweb.WebApp:
             yield from picoweb.http_error(resp, "405")
 
     return app
+
