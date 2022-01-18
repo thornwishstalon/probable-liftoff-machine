@@ -182,7 +182,7 @@ looks promising: http://mqtt-explorer.com/
 ### config file aka config.creds
 
 the config file should look like this:
-```json
+```
 {
   "ssid": "liftoff",            # the ssid of the wifi you want to connect to 
   "password": "<password>",     # [optional] the password for that wifi. can be optional if it's an open wifi
