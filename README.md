@@ -49,10 +49,13 @@ but a lot has been changed in the end. good start point though!
 all elastic, logstash, kibana related. 
 
 ## Architecture
-meet the MAELK Stack 🍻
+meet the **MAELK** Stack 🍻 ( OR the *maelkstrom* )
 
 ![arch](https://github.com/thornwishstalon/probable-liftoff-machine/blob/main/doc/exports/components.drawio.png?raw=true)
+OR
+![](doc/exports/components.drawio.png)
 
+if the image is somehow missing, it's in `/doc/exports/components.drawio.png`
 
 ## DOCKER 🐳
 
@@ -78,9 +81,10 @@ see `docker-compose.yml` for more information or the respective Docker files and
 
 ### Liftoff Module Framework
 we have built a common codebase to be used for all parts of this project -> `src/module/liftoff_module.py`
-any class extending `LiftoffModule` will be capable to either create a wifi or connect to an existing, build a connection to a MQTT Broker and provide the means to react to MQTT topics or push topics themself.
+any class extending `LiftoffModule` will be capable to either create a wifi or connect to an existing one,
+then build a connection to a MQTT Broker and provide the means to react to MQTT topics or push topics themself.
 
-let's explain this modularity with the movement module: 
+let's explain this modularity with the movement module's main file: 
 
 ```python
 from common.credentials import Config
@@ -205,6 +209,7 @@ looks promising: http://mqtt-explorer.com/
     + now current floor should be 1
   + et voilà 🎉
   
+
 
 ### run the rest of the modules (movement, power or rfid)
 * run `setup_module.py` with proper wifi credentials
