@@ -45,7 +45,7 @@ all elastic, logstash, kibana related.
 
 ## Architecture
 
-![arch](https://github.com/thornwishstalon/probable-liftoff-machine/blob/main/docs//doc/exports/components.drawio.png?raw=true)
+![arch](https://github.com/thornwishstalon/probable-liftoff-machine/blob/main/doc/exports/components.drawio.png?raw=true)
 
 
 ## DOCKER 🐳
