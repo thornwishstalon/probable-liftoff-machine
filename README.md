@@ -43,6 +43,11 @@ but a lot has been changed in the end. good start point though!
 ### https://github.com/deviantony/docker-elk
 all elastic, logstash, kibana related. 
 
+## Architecture
+
+![arch](https://github.com/thornwishstalon/probable-liftoff-machine/blob/main/docs//doc/exports/components.drawio.png?raw=true)
+
+
 ## DOCKER 🐳
 
 you will need [docker](https://docs.docker.com/engine/install/) and [docker-compose](https://docs.docker.com/compose/install/)
