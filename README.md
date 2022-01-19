@@ -51,8 +51,6 @@ all elastic, logstash, kibana related.
 ## Architecture
 meet the **MAELK** Stack 🍻 ( OR the *maelkstrom* )
 
-![arch](https://github.com/thornwishstalon/probable-liftoff-machine/blob/main/doc/exports/components.drawio.png?raw=true)
-OR
 ![](doc/exports/components.drawio.png)
 
 if the image is somehow missing, it's in `/doc/exports/components.drawio.png`
@@ -210,7 +208,6 @@ looks promising: http://mqtt-explorer.com/
   + et voilà 🎉
 
 
-![bridge](https://github.com/thornwishstalon/probable-liftoff-machine/blob/main/doc/screenshots/bridge_file_tree_ESP32.png.png?raw=true)  
 ![](doc/screenshots/bridge_file_tree_ESP32.png.png)
 
 ### run the rest of the modules (movement, power or rfid)
@@ -227,7 +224,6 @@ looks promising: http://mqtt-explorer.com/
 + that's it
 
 
-![module](https://github.com/thornwishstalon/probable-liftoff-machine/blob/main/doc/screenshots/movement_module_file_tree_ESP8266.png.png?raw=true)
 ![](doc/screenshots/movement_module_file_tree_ESP8266.png.png)
 
 ### config file aka config.creds
