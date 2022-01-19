@@ -8,14 +8,30 @@
 * [x] implement state machine for control server (and state update loop)
   * basically when to do what and wait for something
 * [ ] do we need a "heartbeat" mqtt event ? 
-* [ ] implement modules:
-  * callbacks & state etc
-  * hardware
-* [ ] implement web UI
-  * bridge offers /state endpoint to retrieve current state
-  * bridge offers /floor
-    * GET returns the current floor it's on
-    * PUT with `next` parameter will schedule a trip to `next`'s value
+  * [ ] implement modules:
+    * callbacks & state etc
+    * hardware
+    * [ ] implement web UI
+      * bridge offers `/state` endpoint to retrieve current state
+        * GET returns json representation of the bridge's state
+        ```json
+          {
+           "doors": 4,        // 4 is fully open, 0 is fully closed
+           "moving": false,   //
+           "state": 0,        // state value... see below!
+           "current_floor": 0 //
+          }
+        ```
+        ```
+        // internal states
+             READY = 0
+             PREPARE_TRIP = 1
+             EXECUTE_TRIP = 2
+             FINISH_TRIP = 3
+        ```
+      * bridge offers `/floor`
+        * GET returns the current floor it's on
+        * PUT with `next` parameter will schedule a trip to `next`'s value
 
 ## external projects used:
 
