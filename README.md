@@ -44,6 +44,7 @@ but a lot has been changed in the end. good start point though!
 all elastic, logstash, kibana related. 
 
 ## Architecture
+meet the MAELK Stack 🍻
 
 ![arch](https://github.com/thornwishstalon/probable-liftoff-machine/blob/main/doc/exports/components.drawio.png?raw=true)
 
