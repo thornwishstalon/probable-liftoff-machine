@@ -7,7 +7,11 @@
   * [x] wifi `password` should be optional! 
 * [x] implement state machine for control server (and state update loop)
   * basically when to do what and wait for something
-* [ ] do we need a "heartbeat" mqtt event ? 
+  * uses SCAN for trip scheduling - preferable move "down" first
+* [ ] document how we events-messages should be used
+  * how to incorporate `transaction_id` 
+  * and other fields
+* [ ] do we need a "heartbeat" mqtt event on all modules? 
   * [ ] implement modules:
     * callbacks & state etc
     * hardware
@@ -23,11 +27,12 @@
       }
     ```
     ```
-    // internal states
-         READY = 0
-         PREPARE_TRIP = 1
-         EXECUTE_TRIP = 2
-         FINISH_TRIP = 3
+    // internal states 
+    // -> see BridgeServer.update_state() how and when states change
+    READY = 0
+    PREPARE_TRIP = 1
+    EXECUTE_TRIP = 2
+    FINISH_TRIP = 3
     ```
   * bridge offers `/floor`
     * GET returns the current floor it's on
