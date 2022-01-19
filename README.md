@@ -4,18 +4,28 @@
 ## TODO 👋
 * [x] check if station mode works when connect to an existing wifi   
   * [x] relevant for modules connecting to the control-server
-  * [ ] wifi `password` should be optional! 
-* [ ] implement state machine for control server (and state update loop)
-  * basically when to do what and wait for something 
+  * [x] wifi `password` should be optional! 
+* [x] implement state machine for control server (and state update loop)
+  * basically when to do what and wait for something
+* [ ] do we need a "heartbeat" mqtt event ? 
 * [ ] implement modules:
   * callbacks & state etc
   * hardware
 * [ ] implement web UI
+  * bridge offers /state endpoint to retrieve current state
+  * bridge offers /floor
+    * GET returns the current floor it's on
+    * PUT with `next` parameter will schedule a trip to `next`'s value
 
-## module server
-props to https://github.com/anson-vandoren/esp8266-captive-portal for the wifi setup stuff
+## external projects used:
 
-but a lot has changed....
+### https://github.com/anson-vandoren/esp8266-captive-portal
+props to this project for the wifi setup stuff.
+
+but a lot has been changed in the end. good start point though!
+
+### https://github.com/deviantony/docker-elk
+all elastic, logstash, kibana related. 
 
 ## DOCKER 🐳
 
@@ -24,8 +34,11 @@ you will need [docker](https://docs.docker.com/engine/install/) and [docker-comp
 to run:
  * `apache` for the UI - http://localhost:8080
  * `mosquitto` the MQTT broker - http://localhost:1883
+ * `kibana`  http://localhost:5601
+ * `elasticsearch`
+ * `logstash` - logstash will push every mqtt message from all topics into `elastic`'s `logstash`-search index ;)
 
-see `docker-compose.yml`
+see `docker-compose.yml` for more information or the respective Docker files and configs.
 
 ## how things work together 🔥
 * one unit serves as wifi access point and control server
@@ -192,7 +205,17 @@ the config file should look like this:
 ```
 `broker_password` is not used at the moment!
 
-## KIBANA
+## Analytics and Monitoring
+
+run to spin up all the necessary containers:
+```
+docker-compose up
+```
+
+if you have changed Dockerfiles you will need to rebuild the images: add the `--build` flag
+
+### KIBANA
+-> the UI to discover stuff in `elasticsearch`
 
 goto [http://localhost:5601](http://localhost:5601)
 
@@ -200,22 +223,21 @@ goto [http://localhost:5601](http://localhost:5601)
 user: elastic
 password: changeme
 ```
-you will be asked to create an index_pattern
+if you access kibana for the first time, you will be asked to create an index_pattern
 ```
 logstash*
 ```
 will be fine and select ``@timestamp`` as datetime thing.
 
-then go to Analytics/Discover and yeah! 
+then click the menu-icon at the top-left corner and go to `Analytics`/`Discover` and see all the stuff happining! 
 
-## web interface
+
+
+### web interface
 
 you will need [docker](https://docs.docker.com/engine/install/) and [docker-compose](https://docs.docker.com/compose/install/)
 
-run:
-```
-docker-compose up
-```
+
 
 and goto [http://localhost:8080](http://localhost:8080)
 
