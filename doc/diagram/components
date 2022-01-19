@@ -1,9 +1,12 @@
-<mxfile modified="2022-01-19T07:29:08.368Z" host="app.diagrams.net" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36" etag="zy4p4Ks2jaRhCg4w8GuY" version="16.1.0" type="github">
+<mxfile modified="2022-01-19T08:12:17.700Z" host="app.diagrams.net" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36" etag="v4yFfgAgu39NqGG3pjeV" version="16.1.0" type="github">
   <diagram id="Ht1M8jgEwFfnCIfOTk4-" name="Page-1">
     <mxGraphModel dx="1426" dy="921" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="FNksphohxSBePvAxf9_E-62" value="" style="fillColor=#EFF0F3;strokeColor=none;dashed=0;verticalAlign=top;fontStyle=0;fontColor=#232F3D;" vertex="1" parent="1">
+          <mxGeometry x="174" y="158" width="130" height="422" as="geometry" />
+        </mxCell>
         <mxCell id="FNksphohxSBePvAxf9_E-1" value="elevator group" style="fillColor=none;strokeColor=#5A6C86;dashed=1;verticalAlign=top;fontStyle=0;fontColor=#5A6C86;" vertex="1" parent="1">
           <mxGeometry x="90" y="70" width="1020" height="520" as="geometry" />
         </mxCell>
