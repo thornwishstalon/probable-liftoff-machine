@@ -14,7 +14,7 @@
     * [ ] implement web UI
       * bridge offers `/state` endpoint to retrieve current state
         * GET returns json representation of the bridge's state
-        ```json
+        ```
           {
            "doors": 4,        // 4 is fully open, 0 is fully closed
            "moving": false,   //
@@ -75,7 +75,7 @@ let's explain this modularity with the movement module:
 from common.credentials import Config
 from module.liftoff_module import LiftoffModule
 from module.subscriber import SubscriberList
-from common.event import EVENT_MOVEMENT_STATE,EVENT_TRIP_READY,EVENT_POST_TRIP_START,EVENT_POST_TRIP_END
+from common.event import EVENT_MOVEMENT_UPDATE,EVENT_TRIP_READY,EVENT_POST_TRIP_START,EVENT_POST_TRIP_END
 import ubinascii
 from machine import Timer, unique_id
 import ujson
@@ -141,7 +141,7 @@ def publish_state(timer):
   global module
   if module.mqtt:
     # let's push the data from state() to the broker ;) => {'current_floor': self.current_floor}
-    module.mqtt.publish(EVENT_MOVEMENT_STATE, ujson.dumps(module.state()))  
+    module.mqtt.publish(EVENT_MOVEMENT_UPDATE, ujson.dumps(module.state()))  
 
 ###### TIMERS
 print('start mqtt queue')
