@@ -1,4 +1,3 @@
-import network
 
 wlan = None
 

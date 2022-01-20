@@ -1,13 +1,11 @@
 from machine import Pin, SoftI2C, Timer, unique_id
 import ubinascii
 import time
-import urandom
 
 from bridge.bridge import setup_bridge
 from bridge.trip import TripSchedule
 from common.credentials import Config
-from common.event import EVENT_UPDATE_FLOOR, EVENT_PRE_TRIP_START, EVENT_TRIP_START, EVENT_POST_TRIP_END, EventPayload, \
-    EVENT_PRE_TRIP_END
+from common.event import EVENT_UPDATE_FLOOR, EVENT_PRE_TRIP_START, EVENT_TRIP_START, EVENT_POST_TRIP_END, EVENT_PRE_TRIP_END, EventFactory
 from module.liftoff_module import LiftoffModule
 from module.subscriber import SubscriberList
 
@@ -48,7 +46,7 @@ class DataState:
             "moving": self.moving
         }
 
-
+### aka the BRAIN
 class BridgeServer(LiftoffModule):
 
     def __init__(self, config, lcd=None):
@@ -66,7 +64,14 @@ class BridgeServer(LiftoffModule):
 
         elif self.data_state.state == BridgeStateMachine.PREPARE_TRIP:
             if self.data_state.doors == 4:
-                self.mqtt.publish(EVENT_PRE_TRIP_START, EventPayload(self.transaction_code, {}).json)
+                self.mqtt.publish(
+                    EVENT_PRE_TRIP_START,
+                    EventFactory.create_event(
+                        self.config.mqtt_id,
+                        self.transaction_code,
+                        {}
+                    ).json
+                )
                 self.data_state.close_doors()
             elif self.data_state.doors > 0:
                 self.data_state.close_doors()
@@ -78,15 +83,22 @@ class BridgeServer(LiftoffModule):
                 self.data_state.moving = True
                 self.mqtt.publish(
                     EVENT_TRIP_START,
-                    EventPayload(self.transaction_code,
-                                 {"next": self.schedule.pop_trip(self.data_state.current_floor)}).json
+                    EventFactory.create_event(
+                        self.config.mqtt_id,
+                        self.transaction_code,
+                        {"next": self.schedule.pop_trip(self.data_state.current_floor)}
+                    ).json
                 )
 
         elif self.data_state.state == BridgeStateMachine.FINISH_TRIP:
             if self.data_state.doors == 0:
                 self.mqtt.publish(
                     EVENT_POST_TRIP_END,
-                    EventPayload(self.transaction_code, {}).json
+                    EventFactory.create_event(
+                        self.config.mqtt_id,
+                        self.transaction_code,
+                        {}
+                    ).json
                 )
                 self.data_state.open_doors()
             elif self.data_state.doors < 4:
