@@ -70,7 +70,7 @@ class BridgeServer(LiftoffModule):
                         self.config.mqtt_id,
                         self.transaction_code,
                         {}
-                    ).json
+                    )
                 )
                 self.data_state.close_doors()
             elif self.data_state.doors > 0:
@@ -87,7 +87,7 @@ class BridgeServer(LiftoffModule):
                         self.config.mqtt_id,
                         self.transaction_code,
                         {"next": self.schedule.pop_trip(self.data_state.current_floor)}
-                    ).json
+                    )
                 )
 
         elif self.data_state.state == BridgeStateMachine.FINISH_TRIP:
@@ -98,7 +98,7 @@ class BridgeServer(LiftoffModule):
                         self.config.mqtt_id,
                         self.transaction_code,
                         {}
-                    ).json
+                    )
                 )
                 self.data_state.open_doors()
             elif self.data_state.doors < 4:

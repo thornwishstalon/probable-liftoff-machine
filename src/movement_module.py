@@ -7,6 +7,7 @@ import ubinascii
 from machine import Timer, unique_id
 import time
 
+
 ### aka the MUSCLE
 class MovementModule(LiftoffModule):
 
@@ -28,22 +29,39 @@ class MovementModule(LiftoffModule):
         return subs
 
     def move(self, message):
-        """do the 'moving'"""
+        """
+        simulate do the 'moving
+        :param message:
+        :return:
+        """
         print(message)
         # todo: add code and trigger other events accordingly e.g.   
 
         # mark that you have arrived by publishing this EVENT_PRE_TRIP_END!
         self.mqtt.publish(
             EVENT_PRE_TRIP_END,
-            EventFactory.create_event(self.config.mqtt_id, self.current_transaction, {}).json
+            EventFactory.create_event(self.config.mqtt_id, self.current_transaction, {})
         )
 
     def register_transaction(self, message):
-        # todo: check if we don't overwrite a current state!
+        """
+        keep track of the ongoing transactino
+        :param message:
+        :return:
+        """
         self.current_transaction = message['id']
 
     def de_register_transaction(self, message):
-        self.current_transaction = None
+        """
+        clear current
+        :param message:
+        :return:
+        """
+        if message['id'] == self.current_transaction:
+            self.current_transaction = None
+        else:
+            # something is wrong!!!
+            pass
 
 
 # timers
@@ -64,7 +82,7 @@ def publish_state(timer):
     if module.mqtt:
         module.mqtt.publish(
             EVENT_MOVEMENT_UPDATE,
-            EventFactory.create_event(config.mqtt_id, module.current_transaction, module.state()).json
+            EventFactory.create_event(config.mqtt_id, module.current_transaction, module.state())
         )
 
 

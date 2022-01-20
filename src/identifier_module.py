@@ -14,8 +14,7 @@ class IdentifierModule(LiftoffModule):
 
     def __init__(self, config):
         super().__init__(config)
-
-        # pseudo ids
+        # pseudo ids. will be randomly drafted when event happens
         self.ids = [
             'alpha'
             'beta',
@@ -34,22 +33,31 @@ class IdentifierModule(LiftoffModule):
         return subs
 
     def post_ids(self, message):
+        """
+        push random ids to broker
+        :param message:
+        :return:
+        """
         transaction_code = message['id']
         record = self.catch_ids()
 
         module.mqtt.publish(
             EVENT_ID_CHECK,
-            EventFactory.create_event(config.mqtt_id, transaction_code, record).json
+            EventFactory.create_event(config.mqtt_id, transaction_code, record)
         )
 
     def catch_ids(self):
-        # push random ids
-        passengers = []
-        # at least 1
-        passengers.append(self.ids[urandom.getrandbits(3)])
-        while urandom.getrandbits(1) == 1:
+        """
+        generate random ids for event payload
+        :return:
+        """
+        # add one random 1 passenger
+        passengers = [self.ids[urandom.getrandbits(3)]]
+        # add random number of other dudes
+        while urandom.getrandbits(1) == 1:  # 0 or 1
+            # add one more passenger id from the pseudo list
             passengers.append(self.ids[urandom.getrandbits(3)])
-
+        # return a list of random passenger ids
         return {'passengers': passengers}
 
 

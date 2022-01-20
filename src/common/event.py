@@ -8,12 +8,12 @@ EVENT_PRE_TRIP_END = b"liftoff/trip/end/pre"
 EVENT_TRIP_END = b"liftoff/trip/end/post"
 EVENT_POST_TRIP_END = b"liftoff/post/trip/end"
 #
-
 EVENT_UPDATE_FLOOR = b"liftoff/update/floor"
 EVENT_MOVEMENT_UPDATE = b"liftoff/move/to"
 EVENT_POWER_UPDATE = b"liftoff/power"
 EVENT_POWER_TRACK_DONE = b"liftoff/power/tracked"
 EVENT_ID_CHECK = b"liftoff/id/tracked"
+
 
 class EventPayload:
     def __init__(self, transaction_code, payload):
@@ -36,6 +36,4 @@ class EventFactory:
     @classmethod
     def create_event(cls, source_id, transaction_code, payload):
         payload['source'] = source_id
-        return EventPayload(transaction_code, payload)
-
-
+        return EventPayload(transaction_code, payload).json

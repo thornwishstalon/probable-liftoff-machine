@@ -27,22 +27,38 @@ class PowerModule(LiftoffModule):
         return subs
 
     def start_track(self, message):
+        """
+        start recording
+        :param message:
+        :return:
+        """
         # todo: check if we don't overwrite a current state!
         transaction_code = message['id']
         self.register[transaction_code] = {'power': 0., 'time_ms': 0}
 
     def stop_track(self, message):
+        """
+        transaction has ended: clear the track and report the total consumption to the broker!
+        :param message:
+        :return:
+        """
         transaction_code = message['id']
         record = self.register[transaction_code]
 
         module.mqtt.publish(
             EVENT_POWER_TRACK_DONE,
-            EventFactory.create_event(config.mqtt_id, transaction_code, record).json
+            EventFactory.create_event(config.mqtt_id, transaction_code, record)
         )
         # remove record
         del self.register[transaction_code]
 
     def update_register(self, power, interval_ms):
+        """
+        update all active transaction tracks with latest power measurement
+        :param power:
+        :param interval_ms:
+        :return:
+        """
         # for all active transactions, add the consumption, and the interval count respectively
         if len(self.register) > 0:
             for item in self.register.values():
@@ -68,7 +84,8 @@ def publish_state(timer):
     if module.mqtt:
         module.mqtt.publish(
             EVENT_POWER_UPDATE,
-            EventFactory.create_event(config.mqtt_id, None, module.state()).json
+            # transaction id is None, because it's a general event
+            EventFactory.create_event(config.mqtt_id, None, module.state())
         )
 
 
@@ -77,6 +94,7 @@ def measure_power(timer):
     current_power = urandom.getrandbits(5)
     global module
     module.power = current_power
+    # update ongoing transaction sums with latest measurement
     module.update_register(current_power, 250)
 
 
