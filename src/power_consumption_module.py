@@ -14,8 +14,7 @@ class PowerModule(LiftoffModule):
     def __init__(self, config):
         super().__init__(config)
         self.register = {}
-        self.power = 0.
-        self.power_register = {}
+        self.power = 0.        
 
     def state(self):
         return {'power': self.power}
@@ -30,20 +29,21 @@ class PowerModule(LiftoffModule):
     def start_track(self, message):
         # todo: check if we don't overwrite a current state!
         transaction_code = message['id']
-        self.power_register[transaction_code] = {'power': 0., 'time_ms': 0}
+        self.register[transaction_code] = {'power': 0., 'time_ms': 0}
 
     def stop_track(self, message):
         transaction_code = message['id']
-        record = self.power_register[transaction_code]
+        record = self.register[transaction_code]
 
         module.mqtt.publish(
             EVENT_POWER_TRACK_DONE,
             EventFactory.create_event(config.mqtt_id, transaction_code, record).json
         )
         # remove record
-        del self.power_register[transaction_code]
+        del self.register[transaction_code]
 
     def update_register(self, power, interval_ms):
+        # for all active transactions, add the consumption, and the interval count respectively
         if len(self.register) > 0:
             for item in self.register.values():
                 item['power'] += power
