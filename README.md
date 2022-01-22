@@ -267,11 +267,42 @@ then click the menu-icon at the top-left corner and go to `Analytics`/`Discover`
 
 
 
-### web interface
+### web interface via apache
 
 you will need [docker](https://docs.docker.com/engine/install/) and [docker-compose](https://docs.docker.com/compose/install/)
-
-
-
 and goto [http://localhost:8080](http://localhost:8080)
 
+#### VUE FRONTEND
+
+
+##### OSX & homebrew
+* `brew install npm`
+* `brew install node`
+##### Windows
+* see: https://phoenixnap.com/kb/install-node-js-npm-on-windows
+
+##### deps
+required global installs: 
+* `npm` see above
+* `node` see above
+* `vue-cli` 
+  * install via `npm` 
+    * -> run `npm install -g @vue/cli`
+
+
+#### install vue + dependencies
+```
+$ cd elevate
+$ npm install
+```
+
+#### serve vue app:
+```
+$ npm run serve
+```
+goto 
+
+http://localhost:8090/
+
+#### prod build
+generate production build - will be served through apache
