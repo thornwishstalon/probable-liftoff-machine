@@ -31,18 +31,22 @@ def setup_bridge(bridge) -> picoweb.WebApp:
     @app.route("/state")
     def state(req, resp):
         if req.method == "GET":
+
+            headers = {"Access-Control-Allow-Origin:": "*"}
             encoded = ujson.dumps( bridge.data_state.json )
-            yield from picoweb.start_response(resp, content_type="application/json")
+            yield from picoweb.start_response(resp, content_type="application/json",headers=headers)
             yield from resp.awrite(encoded)
         else:
             yield from picoweb.http_error(resp, "405")
 
     @app.route("/floor")
     def floor(req, resp):
+        headers = {"Access-Control-Allow-Origin:": "*"}
         if req.method == "GET":
+
             encoded = ujson.dumps({'current_floor': bridge.data_state.current_floor})
 
-            yield from picoweb.start_response(resp, content_type="application/json")
+            yield from picoweb.start_response(resp, content_type="application/json",headers=headers)
             yield from resp.awrite(encoded)
 
         elif req.method == "PUT":
@@ -53,7 +57,7 @@ def setup_bridge(bridge) -> picoweb.WebApp:
                 bridge.schedule.schedule_trip(Trip(next))
 
                 encoded = ujson.dumps("ok")
-                yield from picoweb.start_response(resp, content_type="application/json")
+                yield from picoweb.start_response(resp, content_type="application/json",headers=headers)
                 yield from resp.awrite(encoded)
 
             except ParametersMissingException:
