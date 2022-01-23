@@ -1,26 +1,9 @@
-import { createApp } from 'vue'
-import { createStore } from 'vuex'
+import {createApp} from 'vue'
 
 import App from './App.vue'
-
-
-// Create a new store instance.
-const store = createStore({
-  state () {
-    return {
-      count: 0
-    }
-  },
-  mutations: {
-    increment (state) {
-      state.count++
-    }
-  }
-})
+import {store} from './store/store'
 
 const app = createApp(App)
-
 // Install the store instance as a plugin
-app.use(store)
+app.use(store).mount('#app')
 
-createApp(App).mount('#app')

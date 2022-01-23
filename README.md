@@ -285,12 +285,12 @@ and goto [http://localhost:8080](http://localhost:8080)
 required global installs: 
 * `npm` see above
 * `node` see above
-* `vue-cli` 
+* `vue-cli` -> should be installed globally
   * install via `npm` 
     * -> run `npm install -g @vue/cli`
 
 
-#### install vue + dependencies
+#### install vue + other dependencies
 ```
 $ cd elevate
 $ npm install

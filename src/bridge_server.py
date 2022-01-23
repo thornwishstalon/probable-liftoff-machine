@@ -25,6 +25,10 @@ class DataState:
     doors = 4
     moving = False
 
+
+    def __init__(self, scheduler):
+        self.scheduler = scheduler
+
     def update_current_floor(self, message):
         self.current_floor = int(message)
         return True
@@ -44,6 +48,7 @@ class DataState:
             "current_floor": self.current_floor,
             "doors": self.doors,
             "moving": self.moving
+            "next": list(self.scheduler.queue.keys())
         }
 
 ### aka the BRAIN
@@ -51,8 +56,8 @@ class BridgeServer(LiftoffModule):
 
     def __init__(self, config, lcd=None):
         super().__init__(config, lcd)
-        self.data_state = DataState()
         self.schedule = TripSchedule()
+        self.data_state = DataState(self.schedule)
         self.transaction_code = ""
 
     def update_state(self, timer):
