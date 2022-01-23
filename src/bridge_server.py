@@ -1,6 +1,7 @@
 from machine import Pin, SoftI2C, Timer, unique_id
 import ubinascii
 import time
+import urandom
 
 from bridge.bridge import setup_bridge
 from bridge.trip import TripSchedule
@@ -47,7 +48,7 @@ class DataState:
             "state": self.state,
             "current_floor": self.current_floor,
             "doors": self.doors,
-            "moving": self.moving
+            "moving": self.moving,
             "next": list(self.scheduler.queue.keys())
         }
 
@@ -164,3 +165,4 @@ state_timer.init(period=500, mode=Timer.PERIODIC, callback=module.update_state)
 
 ## run server
 web.run(debug=True, host=module.host, port=80)
+
