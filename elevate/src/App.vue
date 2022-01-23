@@ -19,7 +19,7 @@ export default {
   methods:{
     async updateState ()  {
       try {
-        const url = 'http://191.168.4.1/state'
+        const url = 'http://192.168.4.1/state'
         const response = await axios.get(url)
         this.$store.commit('updateState', response)
 
