@@ -1,5 +1,5 @@
 <template>
-  <h2>Current Level : {{currentLevel}} </h2>
+  <h2>[ {{currentLevel}} ]</h2>
 </template>
 
 <script>
@@ -14,5 +14,8 @@ export default {
 </script>
 
 <style scoped>
+h2{
+  color: #2c3e50;
+}
 
 </style>

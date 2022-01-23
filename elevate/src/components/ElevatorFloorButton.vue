@@ -1,46 +1,40 @@
 <template>
-  <button-spinner
-      @click="onClick"
-      v-bind="isLoading"
-      :disabled="isLoading"
-      :class="{ active: isActive(floor) }"
-  >
+  <button @click="pushTrip()" :class="{ active: isActive() }">
     {{ floor }}
-  </button-spinner>
+  </button>
+
 </template>
 
 <script>
 
-import ButtonSpinner from 'vue-button-spinner'
 import axios from "axios";
+import image from "@/assets/spinner.gif"
 
 export default {
   name: "ElevatorFloorButton",
-  components: {
-    ButtonSpinner
-  },
   props: {
     floor: {
       type: Number,
-      required: true
+      required: true,
     }
   },
-  data() {
+  data: () => {
     return {
-      statusMessage: this.floor,
-      isLoading: false,
+      image: image,
+      isLoading: false
     }
   },
   methods: {
     async pushTrip() {
       try {
-        this.isLoading = true
         const tripParams = new URLSearchParams();
         tripParams.append('next', this.floor.toString());
         const response = axios.put("http://192.168.4.1/floor", {params: tripParams})
         console.log(response)
         this.isLoading = false
+        this.status = true
       } catch (err) {
+        this.status = false
         if (err.response) {
           // client received an error response (5xx, 4xx)
           console.log("Server Error:", err)
@@ -52,12 +46,9 @@ export default {
         }
       }
     },
-    isActive(floor) {
-      return this.$store.getters.isActive(floor)
-    },
-    onClick() {
-      this.pushTrip()
-    },
+    isActive() {
+      return this.$store.getters.isActive(this.floor)
+    }
   }
 }
 </script>
@@ -66,6 +57,9 @@ export default {
 
 button {
   background-color: #007faf;
+  margin: 5px;
+  font-size: 30px;
+  color: white;
 }
 
 button.active {

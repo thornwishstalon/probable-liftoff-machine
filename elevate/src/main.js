@@ -5,5 +5,7 @@ import {store} from './store/store'
 
 const app = createApp(App)
 // Install the store instance as a plugin
-app.use(store).mount('#app')
+app
+    .use(store)
+    .mount('#app')
 
