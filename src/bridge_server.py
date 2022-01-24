@@ -46,7 +46,7 @@ class DataState:
     def json(self):
         return {
             "state": self.state,
-            "current_floor": self.current_floor,
+            "currentLevel": self.current_floor,
             "doors": self.doors,
             "moving": self.moving,
             "next": list(self.scheduler.queue.keys())

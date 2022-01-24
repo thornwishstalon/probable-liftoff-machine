@@ -25,7 +25,7 @@ export const store = createStore({
     mutations: {
         updateState (state, newState){
             state.moving = newState.moving
-            state.nextTrips = newState.nextTrips
+            state.nextTrips = newState.next
             state.currentLevel = newState.currentLevel
         }
     }
