@@ -21,7 +21,7 @@ export default {
       try {
         const url = 'http://192.168.4.1/state'
         const response = await axios.get(url)
-        this.$store.commit('updateState', response)
+        this.$store.commit('updateState', response.data)
 
       } catch (err) {
         if (err.response) {

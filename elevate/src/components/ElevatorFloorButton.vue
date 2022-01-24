@@ -29,7 +29,7 @@ export default {
       try {
         const tripParams = new URLSearchParams();
         tripParams.append('next', this.floor.toString());
-        const response = axios.put("http://192.168.4.1/floor", {params: tripParams})
+        const response = axios.put("http://192.168.4.1/floor", {},{params: tripParams})
         console.log(response)
         this.isLoading = false
         this.status = true
