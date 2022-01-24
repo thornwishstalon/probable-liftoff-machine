@@ -118,8 +118,9 @@ class BridgeServer(LiftoffModule):
         return ''.join((urandom.choice(keys) for _ in range(8)))
 
     def arrive(self, message):
-        print("arrived")
+        print("arrived")        
         self.data_state.state = BridgeStateMachine.FINISH_TRIP
+        self.data_state.current_floor = message['currentLevel']
 
     @property
     def subscriber(self):
@@ -165,4 +166,5 @@ state_timer.init(period=500, mode=Timer.PERIODIC, callback=module.update_state)
 
 ## run server
 web.run(debug=True, host=module.host, port=80)
+
 
