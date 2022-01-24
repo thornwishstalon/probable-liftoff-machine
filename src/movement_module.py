@@ -43,7 +43,7 @@ class MovementModule(LiftoffModule):
             print(message)
             # todo: add code and trigger other events accordingly e.g.
             self.moving = True
-            self.next = (int) message['next']
+            self.next = message['next']
             self.direction = self.next < self.current_floor
 
     def register_transaction(self, message):
@@ -93,11 +93,12 @@ def publish_state(timer):
 def update_state(timer):
     global module
     if module.moving:
-        if module.counter +=1 == module.seconds_per_floor:
-            if not self.direction:
-                self.current_floor += 1
+        module.counter += 1
+        if module.counter == module.seconds_per_floor:
+            if not module.direction:
+                module.current_floor += 1
             else:
-                self.current_floor -= 1
+                module.current_floor -= 1
             module.counter = 0
             if module.current_floor == module.next:
                 module.moving = False
@@ -116,3 +117,4 @@ time.sleep_ms(500)
 print('start update queue')
 measurement_timer.init(period=1000, mode=Timer.PERIODIC, callback=publish_state)
 state_timer.init(period=1000, mode=Timer.PERIODIC, callback=update_state)
+
