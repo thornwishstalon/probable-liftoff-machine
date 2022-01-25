@@ -4,7 +4,7 @@ from module.subscriber import SubscriberList
 from common.event import EVENT_TRIP_READY, EVENT_POST_TRIP_END, \
     EventFactory, EVENT_PRE_TRIP_START, EVENT_MOVEMENT_UPDATE, EVENT_PRE_TRIP_END, EVENT_UPDATE_FLOOR
 import ubinascii
-from machine import Timer, unique_id
+from machine import Timer, unique_id, Pin
 import time
 
 
@@ -14,7 +14,7 @@ class MovementModule(LiftoffModule):
     def __init__(self, config):
         super().__init__(config)
         self.register = {}
-        self.current_floor = 0
+        self.current_floor = 1
         self.current_transaction = None
         self.moving = False
         self.counter = 0
@@ -79,6 +79,14 @@ config = Config(client_id).load()
 module = MovementModule(config)
 module.start()
 
+#LEDS
+FLOOR_1 = Pin(16,Pin.OUT)
+FLOOR_2 = Pin(5,Pin.OUT)
+FLOOR_3 = Pin(4,Pin.OUT)
+FLOOR_4 = Pin(0, Pin.OUT)
+FLOOR_5 = Pin(2, Pin.OUT)
+
+lights=[FLOOR_1,FLOOR_2,FLOOR_3,FLOOR_4,FLOOR_5]
 
 # post everybody about the current state
 def publish_state(timer):
@@ -88,6 +96,12 @@ def publish_state(timer):
             EVENT_MOVEMENT_UPDATE,
             EventFactory.create_event(config.mqtt_id, module.current_transaction, module.state())
         )
+
+def light_up(floor):
+    if floor > 0:
+        for i in range(0,4):
+            lights[i].off() if i != floor -1 else lights[i].on()
+
 
 # simulate moving
 def update_state(timer):
@@ -100,6 +114,8 @@ def update_state(timer):
             else:
                 module.current_floor -= 1
             module.counter = 0
+            #light up stuff
+            light_up(current_floor-1)
             if module.current_floor == module.next:
                 module.moving = False
                 module.next = None
@@ -109,11 +125,14 @@ def update_state(timer):
                     EventFactory.create_event(module.config.mqtt_id, module.current_transaction, {'currentLevel': module.current_floor})
                 )
 
-
 ###### TIMERS
 print('start mqtt queue')
 fetch_timer.init(period=1000, mode=Timer.PERIODIC, callback=module.run)
 time.sleep_ms(500)
+
+# publish current_floor to other modules
+publish_state(None)
+
 print('start update queue')
 measurement_timer.init(period=1000, mode=Timer.PERIODIC, callback=publish_state)
 state_timer.init(period=1000, mode=Timer.PERIODIC, callback=update_state)
