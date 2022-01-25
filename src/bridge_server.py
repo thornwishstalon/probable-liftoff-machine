@@ -1,6 +1,7 @@
 from machine import Pin, SoftI2C, Timer, unique_id
 import ubinascii
 import time
+import urandom
 
 from bridge.bridge import setup_bridge
 from bridge.trip import TripSchedule
@@ -25,6 +26,10 @@ class DataState:
     doors = 4
     moving = False
 
+
+    def __init__(self, scheduler):
+        self.scheduler = scheduler
+
     def update_current_floor(self, message):
         self.current_floor = int(message)
         return True
@@ -41,9 +46,10 @@ class DataState:
     def json(self):
         return {
             "state": self.state,
-            "current_floor": self.current_floor,
+            "currentLevel": self.current_floor,
             "doors": self.doors,
-            "moving": self.moving
+            "moving": self.moving,
+            "next": list(self.scheduler.queue.keys())
         }
 
 ### aka the BRAIN
@@ -51,8 +57,8 @@ class BridgeServer(LiftoffModule):
 
     def __init__(self, config, lcd=None):
         super().__init__(config, lcd)
-        self.data_state = DataState()
         self.schedule = TripSchedule()
+        self.data_state = DataState(self.schedule)
         self.transaction_code = ""
 
     def update_state(self, timer):
@@ -112,8 +118,9 @@ class BridgeServer(LiftoffModule):
         return ''.join((urandom.choice(keys) for _ in range(8)))
 
     def arrive(self, message):
-        print("arrived")
+        print("arrived")        
         self.data_state.state = BridgeStateMachine.FINISH_TRIP
+        self.data_state.current_floor = message['currentLevel']
 
     @property
     def subscriber(self):
@@ -159,3 +166,5 @@ state_timer.init(period=500, mode=Timer.PERIODIC, callback=module.update_state)
 
 ## run server
 web.run(debug=True, host=module.host, port=80)
+
+
