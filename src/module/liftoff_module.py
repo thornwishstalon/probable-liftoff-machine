@@ -2,11 +2,13 @@ import gc
 import network
 import ubinascii as binascii
 import utime as time
+import ujson
 from abc import abstractmethod
 
 from common.credentials import Config
 from common.mqtt_client import MQTTWrapper
 from umqtt.simple import MQTTException
+
 
 class LiftoffModule():
     AP_IP = "192.168.4.1"
@@ -34,7 +36,7 @@ class LiftoffModule():
     def callback(self, topic, message):
         print(topic)
         print(message)
-        self.subscriber.notify(topic, message)
+        self.subscriber.notify(topic, ujson.loads(message))
 
     def connect_to_broker(self):
         """ connects to broker and register to topic
@@ -196,6 +198,7 @@ class LiftoffModule():
     def stop(self):
       if self.mqtt:
         self.mqtt.disconnect()
+
 
 
 

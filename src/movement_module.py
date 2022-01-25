@@ -7,6 +7,8 @@ import ubinascii
 from machine import Timer, unique_id, Pin
 import time
 
+import gc
+
 
 ### aka the MUSCLE
 class MovementModule(LiftoffModule):
@@ -52,6 +54,7 @@ class MovementModule(LiftoffModule):
         :param message:
         :return:
         """
+        print(message)
         self.current_transaction = message['id']
 
     def de_register_transaction(self, message):
@@ -86,7 +89,7 @@ FLOOR_3 = Pin(4,Pin.OUT)
 FLOOR_4 = Pin(0, Pin.OUT)
 FLOOR_5 = Pin(2, Pin.OUT)
 
-lights=[FLOOR_1,FLOOR_2,FLOOR_3,FLOOR_4,FLOOR_5]
+lights={1:FLOOR_1,2:FLOOR_2,3:FLOOR_3,4:FLOOR_4,5:FLOOR_5}
 
 # post everybody about the current state
 def publish_state(timer):
@@ -97,10 +100,9 @@ def publish_state(timer):
             EventFactory.create_event(config.mqtt_id, module.current_transaction, module.state())
         )
 
-def light_up(floor):
-    if floor > 0:
-        for i in range(0,4):
-            lights[i].off() if i != floor -1 else lights[i].on()
+def light_up(floor):    
+    for key,value in lights.items():
+      value.on() if key in floor else value.off()
 
 
 # simulate moving
@@ -115,7 +117,7 @@ def update_state(timer):
                 module.current_floor -= 1
             module.counter = 0
             #light up stuff
-            light_up(current_floor-1)
+            light_up([module.current_floor])
             if module.current_floor == module.next:
                 module.moving = False
                 module.next = None
@@ -126,14 +128,19 @@ def update_state(timer):
                 )
 
 ###### TIMERS
+
 print('start mqtt queue')
 fetch_timer.init(period=1000, mode=Timer.PERIODIC, callback=module.run)
-time.sleep_ms(500)
 
+light_up([1,2,3,4,5])
+time.sleep_ms(500)
+light_up([module.current_floor])
 # publish current_floor to other modules
 publish_state(None)
+gc.collect()
 
 print('start update queue')
-measurement_timer.init(period=1000, mode=Timer.PERIODIC, callback=publish_state)
+#measurement_timer.init(period=1000, mode=Timer.PERIODIC, callback=publish_state)
 state_timer.init(period=1000, mode=Timer.PERIODIC, callback=update_state)
+
 
