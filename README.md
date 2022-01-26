@@ -8,14 +8,27 @@
 * [x] implement state machine for control server (and state update loop)
   * basically when to do what and wait for something
   * uses SCAN for trip scheduling - preferable move "down" first
-* [ ] document how we events-messages should be used
-  * how to incorporate `transaction_id` 
-  * and other fields
-* [ ] do we need a "heartbeat" mqtt event on all modules? 
-  * [ ] implement modules:
-    * callbacks & state etc
-    * hardware
-* [ ] implement web UI
+* [ ] document how we events-messages should be used 
+  * [ ] revise topic names !!!!  
+  * [ ] how to incorporate `transaction_id` -> use `EventFactory` 
+  * [ ] and other fields -> everything is `json`
+* [ ] do we need a "heartbeat" mqtt event on all modules?
+  * -> probably not. but modules coming online could be interesting! 
+* [ ] implement modules:
+  * [ ] brain:
+    * [x] logic
+    * [ ] hardware
+  * [x] movement
+    * [x] callbacks & state etc
+    * [x] hardware 
+  * [ ] power consumption
+    * [x] callbacks & state etc
+    * [ ] hardware
+  * [x] id checker
+    * [x] callbacks & state etc
+    * [ ] hardware
+* [x] implement web UI -> `elevate` directory
+  * [ ] subscribe to mqtt topics (movement_updates) -> faster and more reliable than GET request 
   * bridge offers `/state` endpoint to retrieve current state
     * GET returns json representation of the bridge's state
     ```
