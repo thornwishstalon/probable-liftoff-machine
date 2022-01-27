@@ -64,7 +64,7 @@ class IdentifierModule(LiftoffModule):
 # timers
 fetch_timer = Timer(0)
 measurement_timer = Timer(1)
-publish_timer = Timer(2)
+
 
 #
 client_id = ubinascii.hexlify(unique_id())
@@ -76,4 +76,3 @@ module.start()
 ###### TIMERS
 print('start mqtt queue')
 fetch_timer.init(period=1000, mode=Timer.PERIODIC, callback=module.run)
-time.sleep_ms(500)

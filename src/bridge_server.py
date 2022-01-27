@@ -6,7 +6,8 @@ import urandom
 from bridge.bridge import setup_bridge
 from bridge.trip import TripSchedule
 from common.credentials import Config
-from common.event import EVENT_UPDATE_FLOOR, EVENT_PRE_TRIP_START, EVENT_TRIP_START, EVENT_POST_TRIP_END, EVENT_PRE_TRIP_END, EventFactory
+from common.event import EVENT_UPDATE_FLOOR, EVENT_PRE_TRIP_START, EVENT_TRIP_START, EVENT_POST_TRIP_END, \
+    EVENT_PRE_TRIP_END, EventFactory
 from module.liftoff_module import LiftoffModule
 from module.subscriber import SubscriberList
 
@@ -25,7 +26,6 @@ class DataState:
     current_floor = 0
     doors = 4
     moving = False
-
 
     def __init__(self, scheduler):
         self.scheduler = scheduler
@@ -51,6 +51,7 @@ class DataState:
             "moving": self.moving,
             "next": list(self.scheduler.queue.keys())
         }
+
 
 ### aka the BRAIN
 class BridgeServer(LiftoffModule):
@@ -118,7 +119,7 @@ class BridgeServer(LiftoffModule):
         return ''.join((urandom.choice(keys) for _ in range(8)))
 
     def arrive(self, message):
-        print("arrived")        
+        print("arrived")
         self.data_state.state = BridgeStateMachine.FINISH_TRIP
         self.data_state.current_floor = message['currentLevel']
 
@@ -166,5 +167,3 @@ state_timer.init(period=500, mode=Timer.PERIODIC, callback=module.update_state)
 
 ## run server
 web.run(debug=True, host=module.host, port=80)
-
-

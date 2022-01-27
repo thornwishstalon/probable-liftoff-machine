@@ -11,7 +11,7 @@ class TripSchedule:
 
     def __init__(self):
         self.queue = {}
-        self.disk_size = 5 # we have only 5 floors ;)
+        self.disk_size = 5  # we have only 5 floors ;)
 
     def schedule_trip(self, trip):
         self.queue[trip.to] = trip

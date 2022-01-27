@@ -1,4 +1,3 @@
-
 class SubscriberList:
 
     def __init__(self, priority=100):
@@ -31,5 +30,3 @@ class SubscriberList:
                 messages.append(resp)
             print(messages)
             return messages
-
-

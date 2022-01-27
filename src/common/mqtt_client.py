@@ -7,19 +7,20 @@ class MQTTWrapper:
         self.broker_address = broker_address
         self.callback = callback
         self.counter = 0
+        self.client = None
 
     def initialize(self):
         port = 1883
         print("mqtt id: {}".format(self.id))
-        print("broker: {}:{}".format(self.broker_address,port))
+        print("broker: {}:{}".format(self.broker_address, port))
         self.client = MQTTClient(
-          client_id=self.id, server=self.broker_address, port=port,  keepalive=60
+            client_id=self.id, server=self.broker_address, port=port, keepalive=60
         )
         self.client.set_callback(self.callback)
-    
+
     def disconnect(self):
         self.client.disconnect()
-    
+
     def connect(self):
         self.client.connect()
 
@@ -32,9 +33,6 @@ class MQTTWrapper:
     def run(self):
         self.counter += 1
         if self.counter % 10:
-          self.client.ping()
-          self.counter = 0 
+            self.client.ping()
+            self.counter = 0
         self.client.check_msg()
-
-
-

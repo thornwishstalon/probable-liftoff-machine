@@ -9,7 +9,7 @@ import time
 
 import gc
 
-
+#########################################################################
 ### aka the MUSCLE
 class MovementModule(LiftoffModule):
 
@@ -68,7 +68,7 @@ class MovementModule(LiftoffModule):
         else:
             # something is wrong!!!
             pass
-
+#########################################################################
 
 # timers
 fetch_timer = Timer(0)
@@ -82,15 +82,17 @@ config = Config(client_id).load()
 module = MovementModule(config)
 module.start()
 
-#LEDS
-FLOOR_1 = Pin(16,Pin.OUT)
-FLOOR_2 = Pin(5,Pin.OUT)
-FLOOR_3 = Pin(4,Pin.OUT)
+# LEDS
+# for pinout see ESP8266 part in doc/exports/movement_module.drawio.png
+FLOOR_1 = Pin(16, Pin.OUT)
+FLOOR_2 = Pin(5, Pin.OUT)
+FLOOR_3 = Pin(4, Pin.OUT)
 FLOOR_4 = Pin(0, Pin.OUT)
 FLOOR_5 = Pin(2, Pin.OUT)
+# light map:  used in light_up(light)
+lights = {1: FLOOR_1, 2: FLOOR_2, 3: FLOOR_3, 4: FLOOR_4, 5: FLOOR_5}
 
-lights={1:FLOOR_1,2:FLOOR_2,3:FLOOR_3,4:FLOOR_4,5:FLOOR_5}
-
+#########################################################################
 # post everybody about the current state
 def publish_state(timer):
     global module
@@ -100,9 +102,10 @@ def publish_state(timer):
             EventFactory.create_event(config.mqtt_id, module.current_transaction, module.state())
         )
 
-def light_up(floor):    
-    for key,value in lights.items():
-      value.on() if key in floor else value.off()
+
+def light_up(floor):
+    for key, value in lights.items():
+        value.on() if key in floor else value.off()
 
 
 # simulate moving
@@ -116,7 +119,7 @@ def update_state(timer):
             else:
                 module.current_floor -= 1
             module.counter = 0
-            #light up stuff
+            # light up stuff
             light_up([module.current_floor])
             if module.current_floor == module.next:
                 module.moving = False
@@ -124,23 +127,25 @@ def update_state(timer):
                 module.direction = None
                 module.mqtt.publish(
                     EVENT_PRE_TRIP_END,
-                    EventFactory.create_event(module.config.mqtt_id, module.current_transaction, {'currentLevel': module.current_floor})
+                    EventFactory.create_event(module.config.mqtt_id, module.current_transaction,
+                                              {'currentLevel': module.current_floor})
                 )
+
 
 ###### TIMERS
 
 print('start mqtt queue')
 fetch_timer.init(period=1000, mode=Timer.PERIODIC, callback=module.run)
 
-light_up([1,2,3,4,5])
+light_up([1, 2, 3, 4, 5])
 time.sleep_ms(500)
 light_up([module.current_floor])
 # publish current_floor to other modules
 publish_state(None)
 gc.collect()
 
+#########################################################################
+#########################################################################
 print('start update queue')
-#measurement_timer.init(period=1000, mode=Timer.PERIODIC, callback=publish_state)
+# measurement_timer.init(period=1000, mode=Timer.PERIODIC, callback=publish_state)
 state_timer.init(period=1000, mode=Timer.PERIODIC, callback=update_state)
-
-

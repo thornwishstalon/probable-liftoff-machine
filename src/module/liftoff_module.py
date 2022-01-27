@@ -15,14 +15,14 @@ class LiftoffModule():
     AP_OFF_DELAY = const(10 * 1000)
     MAX_CONN_ATTEMPTS = 10
     DEFAULT_SSID = b"liftoff"
-    
-    def __init__(self, config, lcd = None):
+
+    def __init__(self, config, lcd=None):
         self.local_ip = self.AP_IP
         self.sta_if = network.WLAN(network.STA_IF)
         self.ap_if = network.WLAN(network.AP_IF)
         self.lcd = lcd
         self.config = config
-        
+
         self.conn_time_start = None
         #
         self.host = None
@@ -42,7 +42,7 @@ class LiftoffModule():
         """ connects to broker and register to topic
         """
         print('connect to MQTT broker...')
-     
+
         self.mqtt = MQTTWrapper(self.config.mqtt_id, self.config.mqtt_broker, self.callback)
         self.mqtt.initialize()
         self.mqtt.connect()
@@ -50,11 +50,10 @@ class LiftoffModule():
         for topic in self.subscriber.subscriber_list.keys():
             print(topic)
             self.mqtt.subscribe(topic)
-        
+
         if self.lcd:
-          self.lcd.text("mqtt: ready",0,40)
-          self.lcd.show()
-        
+            self.lcd.text("mqtt: ready", 0, 40)
+            self.lcd.show()
 
     def start_access_point(self):
         # sometimes need to turn off AP before it will come up properly
@@ -68,17 +67,17 @@ class LiftoffModule():
             (self.local_ip, "255.255.255.0", self.local_ip, self.local_ip)
         )
         self.host = self.ap_if.ifconfig()[0]
-        
+
         if self.config.ssid is None:
-            #essid = b"ESP8266-%s" % binascii.hexlify(self.ap_if.config("mac")[-3:])           
+            # essid = b"ESP8266-%s" % binascii.hexlify(self.ap_if.config("mac")[-3:])
             self.config.ssid = self.DEFAULT_SSID
-        
+
         if self.lcd:
-          self.lcd.fill(0)
-          self.lcd.text("{:s}".format(self.config.ssid),0,0)
-          self.lcd.text  ("{}:{}".format(self.host,80),0,20)
-          self.lcd.show()
-        
+            self.lcd.fill(0)
+            self.lcd.text("{:s}".format(self.config.ssid), 0, 0)
+            self.lcd.text("{}:{}".format(self.host, 80), 0, 20)
+            self.lcd.show()
+
         self.ap_if.config(essid=self.config.ssid, authmode=network.AUTH_OPEN)
         print("AP mode configured:", self.ap_if.ifconfig())
 
@@ -140,7 +139,6 @@ class LiftoffModule():
                 print("Turned off access point")
         return False
 
-
     def try_connect_from_file(self):
         print(self.config)
         if self.config.has_wifi():
@@ -154,7 +152,7 @@ class LiftoffModule():
     def liftoff(self):
         print("Starting Server")
         self.start_access_point()
-     
+
         try:
             while True:
                 if self.check_valid_wifi():
@@ -163,7 +161,7 @@ class LiftoffModule():
                 if self.ap_if.active() == True:
                     print("Access Point running!")
                     break
-                
+
 
         except KeyboardInterrupt:
             print("Module stopped")
@@ -174,32 +172,27 @@ class LiftoffModule():
         self.sta_if.active(False)
         if not self.try_connect_from_file():
             self.liftoff()
-            
+
         print("try connect to broker!")
         while True:
-          try:
-            self.connect_to_broker()
-            break
-          except (MQTTException , OSError) as e:
-            print(str(e))
-            print('Failed to connect to MQTT broker. Reconnecting...')
-            time.sleep(5)
-  
+            try:
+                self.connect_to_broker()
+                break
+            except (MQTTException, OSError) as e:
+                print(str(e))
+                print('Failed to connect to MQTT broker. Reconnecting...')
+                time.sleep(5)
+
     def run(self, timer):
-      try:
-        if self.mqtt:
-          self.mqtt.run()
-      except OSError:
-        self.connect_to_broker()
+        try:
+            if self.mqtt:
+                self.mqtt.run()
+        except OSError:
+            self.connect_to_broker()
 
     def cleanup(self):
-      gc.collect()
-    
+        gc.collect()
+
     def stop(self):
-      if self.mqtt:
-        self.mqtt.disconnect()
-
-
-
-
-
+        if self.mqtt:
+            self.mqtt.disconnect()

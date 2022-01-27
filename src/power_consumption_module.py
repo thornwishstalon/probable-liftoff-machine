@@ -8,13 +8,14 @@ from machine import Timer, unique_id
 import time
 import urandom
 
+
 ### aka the NOSE
 class PowerModule(LiftoffModule):
 
     def __init__(self, config):
         super().__init__(config)
         self.register = {}
-        self.power = 0.        
+        self.power = 0.
 
     def state(self):
         return {'power': self.power}
@@ -64,6 +65,7 @@ class PowerModule(LiftoffModule):
             for item in self.register.values():
                 item['power'] += power
                 item['time_ms'] += interval_ms
+
 
 # timers
 fetch_timer = Timer(0)
