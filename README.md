@@ -10,7 +10,8 @@
   * uses SCAN for trip scheduling - preferable move "down" first
 * [ ] document how we events-messages should be used 
   * [ ] revise topic names !!!!  
-  * [ ] how to incorporate `transaction_id` -> use `EventFactory` 
+  * [x] how to incorporate `transaction_id` -> use `EventFactory`
+  * [x] when using `EventFactory` append event source
   * [ ] and other fields -> everything is `json`
 * [ ] do we need a "heartbeat" mqtt event on all modules?
   * -> probably not. but modules coming online could be interesting! 
@@ -27,8 +28,10 @@
   * [x] id checker
     * [x] callbacks & state etc
     * [ ] hardware
-* [x] implement web UI -> `elevate` directory
-  * [ ] subscribe to mqtt topics (movement_updates) -> faster and more reliable than GET request 
+* [x] implement web UI 
+  * -> `elevate` directory, vueJS App
+  * [ ] subscribe to mqtt topics (movement_updates) -> faster and more reliable than GET request
+    * see https://www.emqx.com/en/blog/how-to-use-mqtt-in-vue 
   * bridge offers `/state` endpoint to retrieve current state
     * GET returns json representation of the bridge's state
     ```
