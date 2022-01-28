@@ -4,8 +4,8 @@ import { createStore } from 'vuex'
 // Create a new store instance.
 export const store = createStore({
     state : {
-        currentLevel: -1,
-        nextTrips: [1],
+        currentLevel: 0,
+        nextTrips: [],
         moving: false
     },
     getters:{
@@ -27,6 +27,10 @@ export const store = createStore({
             state.moving = newState.moving
             state.nextTrips = newState.next
             state.currentLevel = newState.currentLevel
+        },
+        updateLevel(state, message){
+            console.log(message)
+            state.currentLevel = message.currentLevel
         }
     }
 })

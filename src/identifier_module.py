@@ -63,7 +63,7 @@ class IdentifierModule(LiftoffModule):
 
 # timers
 fetch_timer = Timer(0)
-measurement_timer = Timer(1)
+
 
 
 #
