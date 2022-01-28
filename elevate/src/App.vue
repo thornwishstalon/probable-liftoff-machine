@@ -82,6 +82,19 @@ export default {
         }
       })
     },
+    destroyConnection() {
+      if (this.client.connected) {
+        try {
+          this.client.end()
+          this.client = {
+            connected: false,
+          }
+          console.log('Successfully disconnected!')
+        } catch (error) {
+          console.log('Disconnect failed', error.toString())
+        }
+      }
+    },
     doSubscribe() {
       const {topic, qos} = this.subscription
       this.client.subscribe(topic, {qos}, (error, res) => {
@@ -111,6 +124,7 @@ export default {
   },
   unmounted() {
     this.doUnSubscribe()
+    this.destroyConnection()
   }
 }
 </script>
