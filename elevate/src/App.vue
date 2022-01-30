@@ -31,10 +31,16 @@ export default {
       client: {
         connected: false
       },
-      subscription: {
+      subscription: [
+        {
         topic: 'liftoff/move/to', //#
         qos: 0,
-      },
+        },
+        {
+          topic: 'liftoff/update/next', //#
+          qos: 0,
+        },
+      ],
 
     }
   },
@@ -80,6 +86,9 @@ export default {
         if (topic === "liftoff/move/to") {
           this.$store.commit('updateLevel', message_object)
         }
+        if (topic === "liftoff/update/next") {
+          this.$store.commit('updateNextQueue', message_object)
+        }
       })
     },
     destroyConnection() {
@@ -96,24 +105,27 @@ export default {
       }
     },
     doSubscribe() {
-      const {topic, qos} = this.subscription
-      this.client.subscribe(topic, {qos}, (error, res) => {
-        if (error) {
-          console.log('Subscribe to topics error', error)
-          return
-        }
-        this.subscribeSuccess = true
-        console.log('Subscribe to topics res', res)
-      })
+      for (const {topic, qos} of this.subscription){
+        console.log(topic)
+        this.client.subscribe(topic, {qos}, (error, res) => {
+          if (error) {
+            console.log('Subscribe to topics error', error)
+            return
+          }
+          this.subscribeSuccess = true
+          console.log('Subscribe to topics res', res)
+        })
+      }
     },
   },
   doUnSubscribe() {
-    const {topic} = this.subscription
-    this.client.unsubscribe(topic, error => {
-      if (error) {
-        console.log('Unsubscribe error', error)
-      }
-    })
+    for (const {topic} of this.subscription){
+      this.client.unsubscribe(topic, error => {
+        if (error) {
+          console.log('Unsubscribe error', error)
+        }
+      })
+    }
   },
   mounted() {
     console.log('get server state')
