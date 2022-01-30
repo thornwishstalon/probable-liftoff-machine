@@ -18,7 +18,7 @@ keys = 'abcdefghijklmnopqrstuvwxyz1234567890'
 GREEN = Pin(17, Pin.OUT)
 YELLOW = Pin(13, Pin.OUT)
 RED = Pin(12, Pin.OUT)
-DOOR = Pin(14, Pin.OUT) # -> simulate servo now
+DOOR = Pin(14, Pin.OUT)  # -> simulate servo now
 
 
 class BridgeStateMachine:
@@ -38,7 +38,7 @@ class DataState:
         self.scheduler = scheduler
 
     def update_current_floor(self, message):
-        self.current_floor = int(message)
+        self.current_floor = message['currentLevel']
         return True
 
     def open_doors(self):
@@ -83,6 +83,7 @@ def light_moving():
     YELLOW.off()
     RED.on()
 
+
 ### aka the BRAIN
 class BridgeServer(LiftoffModule):
 
@@ -91,28 +92,28 @@ class BridgeServer(LiftoffModule):
         self.schedule = TripSchedule()
         self.data_state = DataState(self.schedule)
         self.transaction_code = ""
-        
-        self.max_wait_cycles = 6 
+
+        self.max_wait_cycles = 6
         self.wait_cycles = self.max_wait_cycles
-        
+
     def is_done_waiting(self):
-      self.wait_cycles -= 1
-      
-      if self.wait_cycles % 2 == 0 :
-        GREEN.off()
-      else:
-        GREEN.on()
-        
-      if self.wait_cycles == 0:
-        self.wait_cycles = self.max_wait_cycles
-        return True
-      return False  
-      
+        self.wait_cycles -= 1
+
+        if self.wait_cycles % 2 == 0:
+            GREEN.off()
+        else:
+            GREEN.on()
+
+        if self.wait_cycles == 0:
+            self.wait_cycles = self.max_wait_cycles
+            return True
+        return False
+
     def update_state(self, timer):
 
         if self.data_state.state == BridgeStateMachine.READY:
             light_ready()
-            
+
             if self.schedule.has_trip_scheduled() and self.is_done_waiting():
                 self.data_state.state = BridgeStateMachine.PREPARE_TRIP
                 self.transaction_code = BridgeServer.generate_code()
@@ -213,6 +214,7 @@ lcd = ssd1306.SSD1306_I2C(128, 64, i2c)
 # timers
 fetch_timer = Timer(0)
 state_timer = Timer(1)
+gc_timer = Timer(2)
 
 #
 client_id = ubinascii.hexlify(unique_id())
@@ -231,3 +233,6 @@ state_timer.init(period=500, mode=Timer.PERIODIC, callback=module.update_state)
 ## run server
 web.run(debug=True, host=module.host, port=80)
 
+import gc
+
+state_timer.init(period=60000, mode=Timer.PERIODIC, callback=lambda t: gc.collect())

@@ -60,10 +60,6 @@ def setup_bridge(bridge) -> picoweb.WebApp:
                 parameters = _parse_query_string(req.qs)
                 _require_parameters(parameters, ["next"])
                 bridge.schedule.schedule_trip(Trip(int(parameters["next"])))
-
-                encoded = ujson.dumps("ok")
-                yield from picoweb.start_response(resp, content_type="application/json", headers=headers)
-                yield from resp.awrite(encoded)
                 # trigger event
                 bridge.mqtt.publish(
                     EVENT_UPDATE_NEXT_QUEUE,
@@ -73,6 +69,9 @@ def setup_bridge(bridge) -> picoweb.WebApp:
                         bridge.data_state.next_queue
                     )
                 )
+                encoded = ujson.dumps("ok")
+                yield from picoweb.start_response(resp, content_type="application/json", headers=headers)
+                yield from resp.awrite(encoded)
 
             except ParametersMissingException:
                 yield from picoweb.http_error(resp, "400")
