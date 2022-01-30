@@ -23,10 +23,5 @@ class SubscriberList:
     def notify(self, topic, message):
         if topic in self.subscriber_list.keys():
             sorted_subs = sorted(self.subscriber_list[topic], key=lambda kv: kv.get('priority', 100))
-            messages = []
             for sub in sorted_subs:
-                print(sub)
-                resp = sub['callback'](message)
-                messages.append(resp)
-            print(messages)
-            return messages
+                sub['callback'](message)

@@ -127,12 +127,13 @@ class BridgeServer(LiftoffModule):
                     EventFactory.create_event(
                         self.config.mqtt_id,
                         self.transaction_code,
-                        {"next": self.schedule.pop_trip(self.data_state.current_floor)}
+                        {"next": self.schedule.get_next_trip(self.data_state.current_floor)}
                     )
                 )
 
         elif self.data_state.state == BridgeStateMachine.FINISH_TRIP:
             light_busy()
+            print(self.data_state.doors)
             if self.data_state.doors == 0:
                 self.mqtt.publish(
                     EVENT_POST_TRIP_END,
@@ -158,6 +159,7 @@ class BridgeServer(LiftoffModule):
         print("arrived")
         self.data_state.state = BridgeStateMachine.FINISH_TRIP
         self.data_state.current_floor = message['currentLevel']
+        self.data_state.scheduler.delete_from_queue(message['currentLevel'])
 
     @property
     def subscriber(self):

@@ -34,8 +34,6 @@ class LiftoffModule():
         raise NotImplemented()
 
     def callback(self, topic, message):
-        print(topic)
-        print(message)
         self.subscriber.notify(topic, ujson.loads(message))
 
     def connect_to_broker(self):

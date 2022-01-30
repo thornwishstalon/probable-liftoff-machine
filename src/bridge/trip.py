@@ -19,7 +19,7 @@ class TripSchedule:
     def has_trip_scheduled(self):
         return len(self.queue) > 0
 
-    def pop_trip(self, current_floor):
+    def get_next_trip(self, current_floor):
         # queue is empty
         if len(self.queue) == 0:
             return None
@@ -28,9 +28,12 @@ class TripSchedule:
         else:
             next_floor = self.SCAN(list(self.queue.keys()), current_floor, "down")
 
-        del (self.queue[next_floor])
-
         return next_floor
+
+
+    def delete_from_queue(self, current_floor):
+        del (self.queue[current_floor])
+
 
     def SCAN(self, arr, head, direction):
         """
