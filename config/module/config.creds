@@ -1,0 +1,4 @@
+{
+  "ssid": "liftoff",
+  "mqtt_broker": "192.168.4.2",
+}

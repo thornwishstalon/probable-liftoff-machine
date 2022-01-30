@@ -28,8 +28,10 @@ def setup_stuff(ssid: str, password: str):
     upip.install('micropython-abc')
     upip.install('micropython-umqtt.simple')
     upip.install('micropython-ulogging')
-
+    upip.install('micropython-ssd1306')
+    
     kill_connection()
 
 
 setup_stuff('<ssid>', '<pw>')
+

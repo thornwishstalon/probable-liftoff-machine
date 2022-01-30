@@ -81,8 +81,8 @@ class LiftoffModule():
 
     def connect_to_wifi(self):
         print(
-            "Trying to connect to SSID '{:s}' with password {:s}".format(
-                self.config.ssid, self.config.password
+            "Trying to connect to SSID '{:s}'".format(
+                self.config.ssid
             )
         )
 
@@ -194,3 +194,4 @@ class LiftoffModule():
     def stop(self):
         if self.mqtt:
             self.mqtt.disconnect()
+

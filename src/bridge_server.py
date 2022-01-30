@@ -91,12 +91,29 @@ class BridgeServer(LiftoffModule):
         self.schedule = TripSchedule()
         self.data_state = DataState(self.schedule)
         self.transaction_code = ""
-
+        
+        self.max_wait_cycles = 6 
+        self.wait_cycles = self.max_wait_cycles
+        
+    def is_done_waiting(self):
+      self.wait_cycles -= 1
+      
+      if self.wait_cycles % 2 == 0 :
+        GREEN.off()
+      else:
+        GREEN.on()
+        
+      if self.wait_cycles == 0:
+        self.wait_cycles = self.max_wait_cycles
+        return True
+      return False  
+      
     def update_state(self, timer):
 
         if self.data_state.state == BridgeStateMachine.READY:
             light_ready()
-            if self.schedule.has_trip_scheduled():
+            
+            if self.schedule.has_trip_scheduled() and self.is_done_waiting():
                 self.data_state.state = BridgeStateMachine.PREPARE_TRIP
                 self.transaction_code = BridgeServer.generate_code()
 
@@ -213,3 +230,4 @@ state_timer.init(period=500, mode=Timer.PERIODIC, callback=module.update_state)
 
 ## run server
 web.run(debug=True, host=module.host, port=80)
+

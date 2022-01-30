@@ -1,7 +1,7 @@
 from common.credentials import Config
 from module.liftoff_module import LiftoffModule
 from module.subscriber import SubscriberList
-from common.event import EVENT_TRIP_READY, EVENT_POST_TRIP_END, \
+from common.event import EVENT_TRIP_START, EVENT_POST_TRIP_END, \
     EventFactory, EVENT_PRE_TRIP_START, EVENT_MOVEMENT_UPDATE, EVENT_PRE_TRIP_END, EVENT_UPDATE_FLOOR
 import ubinascii
 from machine import Timer, unique_id, Pin
@@ -25,14 +25,14 @@ class MovementModule(LiftoffModule):
         self.direction = None
 
     def state(self):
-        return {'current_floor': self.current_floor}
+        return {'currentLevel': self.current_floor}
 
     @property
     def subscriber(self):
         subs = SubscriberList()
         subs.register(EVENT_PRE_TRIP_START, self.register_transaction, 500)
         subs.register(EVENT_POST_TRIP_END, self.de_register_transaction, 500)
-        subs.register(EVENT_TRIP_READY, self.move, 500)
+        subs.register(EVENT_TRIP_START, self.move, 500)
         return subs
 
     def move(self, message):
@@ -41,8 +41,9 @@ class MovementModule(LiftoffModule):
         :param message:
         :return:
         """
-        if self.moving == False:
-            print(message)
+        print('move')
+        print(message)
+        if self.moving == False:            
             # todo: add code and trigger other events accordingly e.g.
             self.moving = True
             self.next = message['next']
@@ -54,6 +55,7 @@ class MovementModule(LiftoffModule):
         :param message:
         :return:
         """
+        print('register')
         print(message)
         self.current_transaction = message['id']
 
@@ -63,6 +65,7 @@ class MovementModule(LiftoffModule):
         :param message:
         :return:
         """
+        print('un_register')
         if message['id'] == self.current_transaction:
             self.current_transaction = None
         else:
@@ -96,11 +99,10 @@ lights = {1: FLOOR_1, 2: FLOOR_2, 3: FLOOR_3, 4: FLOOR_4, 5: FLOOR_5}
 # post everybody about the current state
 def publish_state(timer):
     global module
-    if module.mqtt:
-        module.mqtt.publish(
-            EVENT_MOVEMENT_UPDATE,
-            EventFactory.create_event(config.mqtt_id, module.current_transaction, module.state())
-        )
+    module.mqtt.publish(
+        EVENT_UPDATE_FLOOR,
+        EventFactory.create_event(config.mqtt_id, module.current_transaction, module.state())
+    )
 
 
 def light_up(floor):
@@ -110,7 +112,7 @@ def light_up(floor):
 
 # simulate moving
 def update_state(timer):
-    global module
+    global module    
     if module.moving:
         module.counter += 1
         if module.counter == module.seconds_per_floor:
@@ -121,21 +123,29 @@ def update_state(timer):
             module.counter = 0
             # light up stuff
             light_up([module.current_floor])
+            module.mqtt.publish(
+                EVENT_UPDATE_FLOOR,
+                EventFactory.create_event(config.mqtt_id, module.current_transaction, module.state())
+            )
+            
             if module.current_floor == module.next:
                 module.moving = False
                 module.next = None
                 module.direction = None
                 module.mqtt.publish(
                     EVENT_PRE_TRIP_END,
-                    EventFactory.create_event(module.config.mqtt_id, module.current_transaction,
-                                              {'currentLevel': module.current_floor})
+                    EventFactory.create_event(
+                      module.config.mqtt_id, 
+                      module.current_transaction,
+                      {'currentLevel': module.current_floor}
+                    )
                 )
 
 
 ###### TIMERS
 
 print('start mqtt queue')
-fetch_timer.init(period=1000, mode=Timer.PERIODIC, callback=module.run)
+fetch_timer.init(period=500, mode=Timer.PERIODIC, callback=module.run)
 
 light_up([1, 2, 3, 4, 5])
 time.sleep_ms(500)
@@ -149,3 +159,4 @@ gc.collect()
 print('start update queue')
 # measurement_timer.init(period=1000, mode=Timer.PERIODIC, callback=publish_state)
 state_timer.init(period=1000, mode=Timer.PERIODIC, callback=update_state)
+
