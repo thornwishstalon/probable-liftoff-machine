@@ -33,7 +33,7 @@ export default {
       },
       subscription: [
         {
-        topic: 'liftoff/move/to', //#
+        topic: 'liftoff/update/floor', //#
         qos: 0,
         },
         {
@@ -83,7 +83,7 @@ export default {
         var uint8array = new TextEncoder().encode(message);
         var message_object = JSON.parse(new TextDecoder().decode(uint8array));
         // distribute message accordingly
-        if (topic === "liftoff/move/to") {
+        if (topic === "liftoff/update/floor") {
           this.$store.commit('updateLevel', message_object)
         }
         if (topic === "liftoff/update/next") {
