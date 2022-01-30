@@ -7,7 +7,7 @@ from bridge.bridge import setup_bridge
 from bridge.trip import TripSchedule
 from common.credentials import Config
 from common.event import EVENT_UPDATE_FLOOR, EVENT_PRE_TRIP_START, EVENT_TRIP_START, EVENT_POST_TRIP_END, \
-    EVENT_PRE_TRIP_END, EventFactory
+    EVENT_PRE_TRIP_END, EventFactory, EVENT_UPDATE_NEXT_QUEUE
 from module.liftoff_module import LiftoffModule
 from module.subscriber import SubscriberList
 
@@ -160,6 +160,14 @@ class BridgeServer(LiftoffModule):
         self.data_state.state = BridgeStateMachine.FINISH_TRIP
         self.data_state.current_floor = message['currentLevel']
         self.data_state.scheduler.delete_from_queue(message['currentLevel'])
+        self.mqtt.publish(
+            EVENT_UPDATE_NEXT_QUEUE,
+            EventFactory.create_event(
+                self.config.mqtt_id,
+                self.transaction_code,
+                self.data_state.next_queue
+            )
+        )
 
     @property
     def subscriber(self):
@@ -200,7 +208,7 @@ print('network setup done')
 web = setup_bridge(module)
 
 ###### TIMERS
-fetch_timer.init(period=1000, mode=Timer.PERIODIC, callback=module.run)
+fetch_timer.init(period=500, mode=Timer.PERIODIC, callback=module.run)
 state_timer.init(period=500, mode=Timer.PERIODIC, callback=module.update_state)
 
 ## run server
