@@ -13,6 +13,13 @@ from module.subscriber import SubscriberList
 
 keys = 'abcdefghijklmnopqrstuvwxyz1234567890'
 
+# LEDS
+# for pinout see doc/exports/brain_module.drawio.png
+GREEN = Pin(17, Pin.OUT)
+YELLOW = Pin(13, Pin.OUT)
+RED = Pin(12, Pin.OUT)
+DOOR = Pin(14, Pin.OUT) # -> simulate servo now
+
 
 class BridgeStateMachine:
     READY = 0
@@ -52,6 +59,29 @@ class DataState:
             "next": list(self.scheduler.queue.keys())
         }
 
+    @property
+    def next_queue(self):
+        return {
+            "next": list(self.scheduler.queue.keys())
+        }
+
+
+def light_ready():
+    GREEN.on()
+    YELLOW.off()
+    RED.off()
+
+
+def light_busy():
+    GREEN.off()
+    YELLOW.on()
+    RED.off()
+
+
+def light_moving():
+    GREEN.off()
+    YELLOW.off()
+    RED.on()
 
 ### aka the BRAIN
 class BridgeServer(LiftoffModule):
@@ -65,11 +95,13 @@ class BridgeServer(LiftoffModule):
     def update_state(self, timer):
 
         if self.data_state.state == BridgeStateMachine.READY:
+            light_ready()
             if self.schedule.has_trip_scheduled():
                 self.data_state.state = BridgeStateMachine.PREPARE_TRIP
                 self.transaction_code = BridgeServer.generate_code()
 
         elif self.data_state.state == BridgeStateMachine.PREPARE_TRIP:
+            light_busy()
             if self.data_state.doors == 4:
                 self.mqtt.publish(
                     EVENT_PRE_TRIP_START,
@@ -83,9 +115,11 @@ class BridgeServer(LiftoffModule):
             elif self.data_state.doors > 0:
                 self.data_state.close_doors()
             elif self.data_state.doors == 0:
+                DOOR.on()
                 self.data_state.state = BridgeStateMachine.EXECUTE_TRIP
 
         elif self.data_state.state == BridgeStateMachine.EXECUTE_TRIP:
+            light_moving()
             if not self.data_state.moving:
                 self.data_state.moving = True
                 self.mqtt.publish(
@@ -98,6 +132,7 @@ class BridgeServer(LiftoffModule):
                 )
 
         elif self.data_state.state == BridgeStateMachine.FINISH_TRIP:
+            light_busy()
             if self.data_state.doors == 0:
                 self.mqtt.publish(
                     EVENT_POST_TRIP_END,
@@ -111,6 +146,7 @@ class BridgeServer(LiftoffModule):
             elif self.data_state.doors < 4:
                 self.data_state.open_doors()
             elif self.data_state.doors == 4:
+                DOOR.off()
                 self.data_state.state = BridgeStateMachine.READY
                 self.data_state.moving = False
 

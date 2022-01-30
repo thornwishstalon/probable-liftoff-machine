@@ -31,6 +31,10 @@ export const store = createStore({
         updateLevel(state, message){
             console.log(message)
             state.currentLevel = message.currentLevel
+        },
+        updateNextQueue(state, message){
+            console.log(message)
+            state.nextTrips = message.next
         }
     }
 })

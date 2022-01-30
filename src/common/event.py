@@ -8,6 +8,7 @@ EVENT_PRE_TRIP_END = b"liftoff/trip/end/pre"
 EVENT_TRIP_END = b"liftoff/trip/end/post"
 EVENT_POST_TRIP_END = b"liftoff/post/trip/end"
 #
+EVENT_UPDATE_NEXT_QUEUE = b"liftoff/update/next"
 EVENT_UPDATE_FLOOR = b"liftoff/update/floor"
 EVENT_MOVEMENT_UPDATE = b"liftoff/move/to"
 EVENT_POWER_UPDATE = b"liftoff/power"
