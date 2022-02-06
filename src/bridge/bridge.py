@@ -59,17 +59,23 @@ def setup_bridge(bridge) -> picoweb.WebApp:
             try:
                 parameters = _parse_query_string(req.qs)
                 _require_parameters(parameters, ["next"])
-                bridge.schedule.schedule_trip(Trip(int(parameters["next"])))
-                # trigger event
-                bridge.mqtt.publish(
-                    EVENT_UPDATE_NEXT_QUEUE,
-                    EventFactory.create_event(
-                        bridge.config.mqtt_id,
-                        None,
-                        bridge.data_state.next_queue
+                next_floor = int(parameters["next"])
+                if bridge.data_state.current_floor != next_floor:
+
+                    bridge.schedule.schedule_trip(Trip(next_floor))
+                    # trigger event
+                    bridge.mqtt.publish(
+                        EVENT_UPDATE_NEXT_QUEUE,
+                        EventFactory.create_event(
+                            bridge.config.mqtt_id,
+                            None,
+                            bridge.data_state.next_queue
+                        )
                     )
-                )
-                encoded = ujson.dumps("ok")
+                    encoded = ujson.dumps("ok")
+                else:
+                    encoded = ujson.dumps("already there")
+
                 yield from picoweb.start_response(resp, content_type="application/json", headers=headers)
                 yield from resp.awrite(encoded)
 
