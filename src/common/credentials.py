@@ -49,4 +49,4 @@ class Config:
 
     def has_wifi(self):
         # Ensure credentials are not None or empty
-        return self.ssid is not None
+        return all((self.ssid is not None, self.password is not None))
