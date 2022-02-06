@@ -18,19 +18,19 @@
 * [ ] implement modules:
   * [ ] brain:
     * [x] logic
-    * [ ] hardware
+    * [ ] hardware (doors missing)
   * [x] movement
     * [x] callbacks & state etc
-    * [x] hardware 
+    * [x] hardware (add servo)
   * [ ] power consumption
     * [x] callbacks & state etc
     * [ ] hardware
   * [x] id checker
     * [x] callbacks & state etc
-    * [ ] hardware
+    * [x] hardware
 * [x] implement web UI 
   * -> `elevate` directory, vueJS App
-  * [ ] subscribe to mqtt topics (movement_updates) -> faster and more reliable than GET request
+  * [x] subscribe to mqtt topics (movement_updates) -> faster and more reliable than GET request
     * see https://www.emqx.com/en/blog/how-to-use-mqtt-in-vue 
   * bridge offers `/state` endpoint to retrieve current state
     * GET returns json representation of the bridge's state
