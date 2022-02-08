@@ -2,11 +2,10 @@ version: '3.2'
 
 services:
   apache:
-    image: bitnami/apache:latest
+    build:
+      context: ./elevate/
     ports:
       - "8080:8080"
-    volumes:
-      - ./elevate/dist:/app
     networks:
       - elk
 
