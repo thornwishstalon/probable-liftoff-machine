@@ -43,8 +43,7 @@ class MovementModule(LiftoffModule):
         """
         print('move')
         print(message)
-        if self.moving == False:            
-            # todo: add code and trigger other events accordingly e.g.
+        if not self.moving and self.current_floor != message['next']:
             self.moving = True
             self.next = message['next']
             self.direction = self.next < self.current_floor
@@ -145,7 +144,7 @@ def update_state(timer):
 ###### TIMERS
 
 print('start mqtt queue')
-fetch_timer.init(period=500, mode=Timer.PERIODIC, callback=module.run)
+fetch_timer.init(period=250, mode=Timer.PERIODIC, callback=module.run)
 
 light_up([1, 2, 3, 4, 5])
 time.sleep_ms(500)

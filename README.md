@@ -2,57 +2,25 @@
 ## UbiComp WS 2021 - Group 10
 
 ## TODO 👋
-* [x] check if station mode works when connect to an existing wifi   
-  * [x] relevant for modules connecting to the control-server
-  * [x] wifi `password` should be optional! 
-* [x] implement state machine for control server (and state update loop)
-  * basically when to do what and wait for something
-  * uses SCAN for trip scheduling - preferable move "down" first
 * [ ] document how we events-messages should be used 
-  * [ ] revise topic names !!!!  
-  * [x] how to incorporate `transaction_id` -> use `EventFactory`
-  * [x] when using `EventFactory` append event source
-  * [ ] and other fields -> everything is `json`
+  * [ ] revise topic names? 
 * [ ] do we need a "heartbeat" mqtt event on all modules?
-  * -> probably not. but modules coming online could be interesting! 
-* [ ] implement modules:
+  * -> probably not. but seeing modules coming online could be interesting! 
+
+### implement modules:
   * [ ] brain:
     * [x] logic
-    * [ ] hardware
+    * [ ] hardware (doors missing)
   * [x] movement
     * [x] callbacks & state etc
-    * [x] hardware 
+    * [x] hardware (add servo)
   * [ ] power consumption
     * [x] callbacks & state etc
     * [ ] hardware
   * [x] id checker
     * [x] callbacks & state etc
-    * [ ] hardware
-* [x] implement web UI 
-  * -> `elevate` directory, vueJS App
-  * [ ] subscribe to mqtt topics (movement_updates) -> faster and more reliable than GET request
-    * see https://www.emqx.com/en/blog/how-to-use-mqtt-in-vue 
-  * bridge offers `/state` endpoint to retrieve current state
-    * GET returns json representation of the bridge's state
-    ```
-      {
-       "doors": 4,        // 4 is fully open, 0 is fully closed
-       "moving": false,   //
-       "state": 0,        // state value... see below!
-       "current_floor": 0 //
-      }
-    ```
-    ```
-    // internal states 
-    // -> see BridgeServer.update_state() how and when states change
-    READY = 0
-    PREPARE_TRIP = 1
-    EXECUTE_TRIP = 2
-    FINISH_TRIP = 3
-    ```
-  * bridge offers `/floor`
-    * GET returns the current floor it's on
-    * PUT with `next` parameter will schedule a trip to `next`'s value
+    * [x] hardware
+
 
 ## external projects used:
 
