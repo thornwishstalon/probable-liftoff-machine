@@ -35,3 +35,4 @@ def setup_stuff(ssid: str, password: str):
 
 setup_stuff('<ssid>', '<pw>')
 
+

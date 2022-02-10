@@ -47,6 +47,11 @@ class MovementModule(LiftoffModule):
             self.moving = True
             self.next = message['next']
             self.direction = self.next < self.current_floor
+            if self.direction:
+              rotor_up()
+            else:
+              rotor_down()  
+            
 
     def register_transaction(self, message):
         """
@@ -94,6 +99,11 @@ FLOOR_5 = Pin(2, Pin.OUT)
 # light map:  used in light_up(light)
 lights = {1: FLOOR_1, 2: FLOOR_2, 3: FLOOR_3, 4: FLOOR_4, 5: FLOOR_5}
 
+rotor_pin = machine.Pin(14)
+rotor = machine.PWM(rotor_pin)
+rotor.freq(1000)
+rotor.duty(0)
+
 #########################################################################
 # post everybody about the current state
 def publish_state(timer):
@@ -103,6 +113,14 @@ def publish_state(timer):
         EventFactory.create_event(config.mqtt_id, module.current_transaction, module.state())
     )
 
+def rotor_up():
+  rotor.duty(900)
+  
+def rotor_down():
+  rotor.duty(256)
+  
+def rotor_stop():
+  rotor.duty(0)
 
 def light_up(floor):
     for key, value in lights.items():
@@ -128,23 +146,24 @@ def update_state(timer):
             )
             
             if module.current_floor == module.next:
-                module.moving = False
-                module.next = None
-                module.direction = None
-                module.mqtt.publish(
-                    EVENT_PRE_TRIP_END,
-                    EventFactory.create_event(
-                      module.config.mqtt_id, 
-                      module.current_transaction,
-                      {'currentLevel': module.current_floor}
-                    )
-                )
+              rotor_stop()
+              module.moving = False
+              module.next = None
+              module.direction = None
+              module.mqtt.publish(
+                  EVENT_PRE_TRIP_END,
+                  EventFactory.create_event(
+                    module.config.mqtt_id, 
+                    module.current_transaction,
+                    {'currentLevel': module.current_floor}
+                  )
+              )
 
 
 ###### TIMERS
 
 print('start mqtt queue')
-fetch_timer.init(period=250, mode=Timer.PERIODIC, callback=module.run)
+fetch_timer.init(period=500, mode=Timer.PERIODIC, callback=module.run)
 
 light_up([1, 2, 3, 4, 5])
 time.sleep_ms(500)
@@ -158,4 +177,5 @@ gc.collect()
 print('start update queue')
 # measurement_timer.init(period=1000, mode=Timer.PERIODIC, callback=publish_state)
 state_timer.init(period=1000, mode=Timer.PERIODIC, callback=update_state)
+
 

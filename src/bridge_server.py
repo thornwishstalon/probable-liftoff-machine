@@ -20,6 +20,10 @@ YELLOW = Pin(13, Pin.OUT)
 RED = Pin(12, Pin.OUT)
 DOOR = Pin(14, Pin.OUT)  # -> simulate servo now
 
+rotor_pin = Pin(2)
+rotor = machine.PWM(rotor_pin)
+rotor.freq(1000)
+rotor.duty(0)
 
 class BridgeStateMachine:
     READY = 0
@@ -82,7 +86,8 @@ def light_moving():
     GREEN.off()
     YELLOW.off()
     RED.on()
-
+    
+    
 
 ### aka the BRAIN
 class BridgeServer(LiftoffModule):
@@ -134,6 +139,7 @@ class BridgeServer(LiftoffModule):
                 self.data_state.close_doors()
             elif self.data_state.doors == 0:
                 DOOR.on()
+                rotor_close()
                 self.data_state.state = BridgeStateMachine.EXECUTE_TRIP
 
         elif self.data_state.state == BridgeStateMachine.EXECUTE_TRIP:
@@ -166,6 +172,7 @@ class BridgeServer(LiftoffModule):
                 self.data_state.open_doors()
             elif self.data_state.doors == 4:
                 DOOR.off()
+                rotor_open()
                 self.data_state.state = BridgeStateMachine.READY
                 self.data_state.moving = False
 
@@ -215,6 +222,7 @@ lcd = ssd1306.SSD1306_I2C(128, 64, i2c)
 fetch_timer = Timer(0)
 state_timer = Timer(1)
 gc_timer = Timer(2)
+door_timer = Timer(3)
 
 #
 client_id = ubinascii.hexlify(unique_id())
@@ -224,15 +232,28 @@ module = BridgeServer(config, lcd=lcd)
 module.start()
 print('network setup done')
 
-web = setup_bridge(module)
+web = setup_bridge(module)  
 
 ###### TIMERS
 fetch_timer.init(period=500, mode=Timer.PERIODIC, callback=module.run)
-state_timer.init(period=500, mode=Timer.PERIODIC, callback=module.update_state)
+state_timer.init(period=1000, mode=Timer.PERIODIC, callback=module.update_state)
 
 ## run server
 web.run(debug=True, host=module.host, port=80)
 
 import gc
 
+####### door control
+def rotor_open():
+  rotor.duty(256)
+  door_timer.init(period=1000, mode=Timer.ONE_SHOT, callback=lambda t:rotor.duty(0))
+  
+
+def rotor_close():
+  rotor.duty(1000)
+  door_timer.init(period=1000, mode=Timer.ONE_SHOT, callback=lambda t:rotor.duty(0))
+  
+
+
 state_timer.init(period=60000, mode=Timer.PERIODIC, callback=lambda t: gc.collect())
+
