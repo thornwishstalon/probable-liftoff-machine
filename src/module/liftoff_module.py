@@ -15,7 +15,7 @@ class LiftoffModule():
     AP_OFF_DELAY = const(10 * 1000)
     MAX_CONN_ATTEMPTS = 10
     DEFAULT_SSID = b"liftoff"
-    DEFAULT_PASSWORD = b"liftoff"
+    DEFAULT_PASSWORD = b"liftoff_1234"
 
     def __init__(self, config, lcd=None):
         self.local_ip = self.AP_IP
@@ -71,13 +71,15 @@ class LiftoffModule():
             # essid = b"ESP8266-%s" % binascii.hexlify(self.ap_if.config("mac")[-3:])
             self.config.ssid = self.DEFAULT_SSID
             self.config.password = self.DEFAULT_PASSWORD
+            self.config.mode = Config.ACCESS_POINT
 
         if self.lcd:
             self.lcd.fill(0)
             self.lcd.text("{:s}".format(self.config.ssid), 0, 0)
-            self.lcd.text("{}:{}".format(self.host, 80), 0, 20)
+            self.lcd.text("{}".format(self.config.password), 0, 20)
             self.lcd.show()
-
+        
+        print(self.config.password)
         self.ap_if.config(essid=self.config.ssid, authmode=network.AUTH_WPA_WPA2_PSK, password=self.config.password)
         print("AP mode configured:", self.ap_if.ifconfig())
 
@@ -196,4 +198,6 @@ class LiftoffModule():
     def stop(self):
         if self.mqtt:
             self.mqtt.disconnect()
+
+
 

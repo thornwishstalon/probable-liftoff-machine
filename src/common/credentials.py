@@ -2,8 +2,11 @@ import uos
 import ujson
 
 
+
 class Config:
     CRED_FILE = "./config.creds"
+    STATION = 1
+    ACCESS_POINT = 0
 
     def __init__(self, mqtt_id, ssid=None, password=None, mqtt_broker=None, broker_password=None):
         self.ssid = ssid
@@ -11,6 +14,7 @@ class Config:
         self.mqtt_broker = mqtt_broker
         self.broker_password = broker_password
         self.mqtt_id = mqtt_id
+        self.mode = Config.ACCESS_POINT
 
         print(self.mqtt_id)
 
@@ -37,6 +41,7 @@ class Config:
 
         except OSError as e:
             print(e)
+                          
         return self
 
     def remove(self):
@@ -48,5 +53,6 @@ class Config:
         self.ssid = self.password = None
 
     def has_wifi(self):
-        # Ensure credentials are not None or empty
-        return all((self.ssid is not None, self.password is not None))
+        # Ensure credentials are not None or empty      
+        return all((self.ssid is not None, self.password is not None, self.mode == Config.STATION))
+
