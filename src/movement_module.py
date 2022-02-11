@@ -101,7 +101,7 @@ lights = {1: FLOOR_1, 2: FLOOR_2, 3: FLOOR_3, 4: FLOOR_4, 5: FLOOR_5}
 
 rotor_pin = machine.Pin(14)
 rotor = machine.PWM(rotor_pin)
-rotor.freq(1000)
+rotor.freq(50)
 rotor.duty(0)
 
 #########################################################################
@@ -114,10 +114,10 @@ def publish_state(timer):
     )
 
 def rotor_up():
-  rotor.duty(900)
+  rotor.duty(10)
   
 def rotor_down():
-  rotor.duty(256)
+  rotor.duty(200)
   
 def rotor_stop():
   rotor.duty(0)
@@ -177,5 +177,6 @@ gc.collect()
 print('start update queue')
 # measurement_timer.init(period=1000, mode=Timer.PERIODIC, callback=publish_state)
 state_timer.init(period=1000, mode=Timer.PERIODIC, callback=update_state)
+
 
 
