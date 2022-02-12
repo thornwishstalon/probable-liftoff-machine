@@ -139,7 +139,6 @@ class BridgeServer(LiftoffModule):
         elif self.data_state.state == BridgeStateMachine.PREPARE_TRIP:
             light_busy()
             if self.data_state.doors == 4:
-                print(rotor.duty())
                 rotor_close()
                 self.mqtt.publish(
                     EVENT_PRE_TRIP_START,
@@ -172,7 +171,6 @@ class BridgeServer(LiftoffModule):
 
         elif self.data_state.state == BridgeStateMachine.FINISH_TRIP:
             light_busy()
-            print(self.data_state.doors)
             if self.data_state.doors == 0:          
                 self.mqtt.publish(
                     EVENT_POST_TRIP_END,
