@@ -22,7 +22,8 @@ DOOR = Pin(14, Pin.OUT)  # -> simulate servo now
 
 rotor_pin = Pin(2)
 rotor = PWM(rotor_pin)
-rotor.freq(1000)
+rotor.freq(8)
+
 rotor.duty(0)
 
 class BridgeStateMachine:
@@ -91,12 +92,12 @@ def light_moving():
 door_timer = Timer(3)  
 ####### door control
 def rotor_open():
-  rotor.duty(1000)
+  rotor.duty(14)
   door_timer.init(period=500, mode=Timer.ONE_SHOT, callback=lambda t:rotor.duty(0))
   
 
 def rotor_close():
-  rotor.duty(256)
+  rotor.duty(6)
   door_timer.init(period=500, mode=Timer.ONE_SHOT, callback=lambda t:rotor.duty(0))
   
 
@@ -172,9 +173,7 @@ class BridgeServer(LiftoffModule):
         elif self.data_state.state == BridgeStateMachine.FINISH_TRIP:
             light_busy()
             print(self.data_state.doors)
-            if self.data_state.doors == 0:
-                print(rotor.duty())
-                rotor_open()
+            if self.data_state.doors == 0:          
                 self.mqtt.publish(
                     EVENT_POST_TRIP_END,
                     EventFactory.create_event(
@@ -187,6 +186,7 @@ class BridgeServer(LiftoffModule):
             elif self.data_state.doors < 4:
                 self.data_state.open_doors()
             elif self.data_state.doors == 4:
+                rotor_open()
                 DOOR.off()                
                 self.data_state.state = BridgeStateMachine.READY
                 self.data_state.moving = False
@@ -254,7 +254,7 @@ print('network setup done')
 web = setup_bridge(module)  
 
 ###### TIMERS
-fetch_timer.init(period=500, mode=Timer.PERIODIC, callback=module.run)
+fetch_timer.init(period=250, mode=Timer.PERIODIC, callback=module.run)
 state_timer.init(period=500, mode=Timer.PERIODIC, callback=module.update_state)
 
 ## run server
@@ -264,5 +264,6 @@ import gc
 
 
 state_timer.init(period=60000, mode=Timer.PERIODIC, callback=lambda t: gc.collect())
+
 
 
