@@ -2,6 +2,7 @@
 FROM node:16-alpine as build-stage
 WORKDIR /app
 COPY package*.json ./
+ENV NODE_ENV development
 RUN npm install --silent \
     npm install @vue/cli -g
 
