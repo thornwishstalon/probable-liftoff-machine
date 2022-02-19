@@ -4,10 +4,13 @@ from module.subscriber import SubscriberList
 from common.event import EVENT_POST_TRIP_END, EventFactory, EVENT_PRE_TRIP_START, EVENT_POWER_UPDATE, \
     EVENT_POWER_TRACK_DONE, EVENT_ID_CHECK
 import ubinascii
-from machine import Timer, unique_id
+from machine import Timer, unique_id, Pin
 import time
 import urandom
 
+
+LED = Pin(5, Pin.OUT)
+LED.on()
 
 ### aka the EYES
 class IdentifierModule(LiftoffModule):
@@ -51,6 +54,8 @@ class IdentifierModule(LiftoffModule):
         generate random ids for event payload
         :return:
         """
+        LED.on()
+        led_timer.init(period=500, mode=Timer.ONE_SHOT, callback=lambda t:LED.off())
         # add one random 1 passenger
         passengers = [self.ids[urandom.getrandbits(3)]]
         # add random number of other dudes
@@ -61,14 +66,15 @@ class IdentifierModule(LiftoffModule):
         return {'passengers': passengers}
 
 
+
 # timers
 fetch_timer = Timer(0)
-
-
+led_timer = Timer(1)
 
 #
 client_id = ubinascii.hexlify(unique_id())
 config = Config(client_id).load()
+config.mode = 1
 
 module = IdentifierModule(config)
 module.start()
@@ -76,3 +82,6 @@ module.start()
 ###### TIMERS
 print('start mqtt queue')
 fetch_timer.init(period=1000, mode=Timer.PERIODIC, callback=module.run)
+LED.off()
+
+

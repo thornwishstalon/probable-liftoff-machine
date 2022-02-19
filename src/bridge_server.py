@@ -194,7 +194,6 @@ class BridgeServer(LiftoffModule):
         return ''.join((urandom.choice(keys) for _ in range(8)))
 
     def arrive(self, message):
-        print("arrived")
         self.data_state.state = BridgeStateMachine.FINISH_TRIP
         self.data_state.current_floor = message['currentLevel']
         self.data_state.scheduler.delete_from_queue(message['currentLevel'])

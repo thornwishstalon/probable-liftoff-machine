@@ -85,7 +85,7 @@ state_timer = Timer(2)
 #
 client_id = ubinascii.hexlify(unique_id())
 config = Config(client_id).load()
-
+config.mode = 1
 module = MovementModule(config)
 module.start()
 
@@ -177,6 +177,7 @@ gc.collect()
 print('start update queue')
 # measurement_timer.init(period=1000, mode=Timer.PERIODIC, callback=publish_state)
 state_timer.init(period=1000, mode=Timer.PERIODIC, callback=update_state)
+
 
 
 

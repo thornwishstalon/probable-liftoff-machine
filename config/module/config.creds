@@ -1,3 +1,5 @@
 {
+  "ssid":"liftoff",
+  "password":"liftoff_1234",
   "mqtt_broker": "192.168.4.2",
 }

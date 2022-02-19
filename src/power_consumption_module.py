@@ -4,9 +4,11 @@ from module.subscriber import SubscriberList
 from common.event import EVENT_POST_TRIP_END, EventFactory, EVENT_PRE_TRIP_START, EVENT_POWER_UPDATE, \
     EVENT_POWER_TRACK_DONE
 import ubinascii
-from machine import Timer, unique_id
+from machine import Timer, unique_id, Pin
 import time
 import urandom
+import uasyncio
+from Emonlib import Emonlib
 
 
 ### aka the NOSE
@@ -18,7 +20,7 @@ class PowerModule(LiftoffModule):
         self.power = 0.
 
     def state(self):
-        return {'power': self.power}
+        return {'watt': self.power}
 
     @property
     def subscriber(self):
@@ -45,7 +47,8 @@ class PowerModule(LiftoffModule):
         """
         transaction_code = message['id']
         record = self.register[transaction_code]
-
+        
+        
         module.mqtt.publish(
             EVENT_POWER_TRACK_DONE,
             EventFactory.create_event(config.mqtt_id, transaction_code, record)
@@ -71,6 +74,8 @@ class PowerModule(LiftoffModule):
 fetch_timer = Timer(0)
 measurement_timer = Timer(1)
 publish_timer = Timer(2)
+emon = Emonlib()
+
 
 #
 client_id = ubinascii.hexlify(unique_id())
@@ -79,31 +84,39 @@ config = Config(client_id).load()
 module = PowerModule(config)
 module.start()
 
+async def setup():
+  await emon.current(Pin(36, Pin.IN), 30)     
 
+async def measure(emon):
+     return await emon.calc_current_rms(1480) * 230     
+  
 # post everybody about the current state
 def publish_state(timer):
     global module
-    if module.mqtt:
-        module.mqtt.publish(
-            EVENT_POWER_UPDATE,
-            # transaction id is None, because it's a general event
-            EventFactory.create_event(config.mqtt_id, None, module.state())
-        )
+    module.mqtt.publish(
+        EVENT_POWER_UPDATE,
+        # transaction id is None, because it's a general event
+        EventFactory.create_event(config.mqtt_id, None, module.state())
+    )
 
 
 def measure_power(timer):
     # todo actual measure something:
-    current_power = urandom.getrandbits(5)
+    current_power = uasyncio.run(measure(emon))
     global module
     module.power = current_power
     # update ongoing transaction sums with latest measurement
     module.update_register(current_power, 250)
 
 
+uasyncio.run(setup())
+
 ###### TIMERS
 print('start mqtt queue')
-fetch_timer.init(period=1000, mode=Timer.PERIODIC, callback=module.run)
+fetch_timer.init(period=500, mode=Timer.PERIODIC, callback=module.run)
 time.sleep_ms(500)
 print('start update queue')
-publish_timer.init(period=1000, mode=Timer.PERIODIC, callback=publish_state)
-publish_timer.init(period=250, mode=Timer.PERIODIC, callback=measure_power)
+publish_timer.init(period=5000, mode=Timer.PERIODIC, callback=publish_state)
+measurement_timer.init(period=250, mode=Timer.PERIODIC, callback=measure_power)
+
+
