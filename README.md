@@ -3,6 +3,9 @@
 
 ![](doc/project_liftoff.jpg)
 
+## Micropyhton on ESP32 & ESP8266
+code used works on Micropython 1.17 and 1.18. For more information about the firmware see http://micropython.org/
+
 ## external projects used:
 
 ### https://github.com/anson-vandoren/esp8266-captive-portal
