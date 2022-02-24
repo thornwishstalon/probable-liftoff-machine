@@ -1,26 +1,7 @@
 # probable-liftoff-machine 🚀
 ## UbiComp WS 2021 - Group 10
 
-## TODO 👋
-* [ ] document how we events-messages should be used 
-  * [ ] revise topic names? 
-* [ ] do we need a "heartbeat" mqtt event on all modules?
-  * -> probably not. but seeing modules coming online could be interesting! 
-
-### implement modules:
-  * [ ] brain:
-    * [x] logic
-    * [ ] hardware (doors missing)
-  * [x] movement
-    * [x] callbacks & state etc
-    * [x] hardware (add servo)
-  * [ ] power consumption
-    * [x] callbacks & state etc
-    * [ ] hardware
-  * [x] id checker
-    * [x] callbacks & state etc
-    * [x] hardware
-
+![](doc/project_liftoff.png)
 
 ## external projects used:
 
