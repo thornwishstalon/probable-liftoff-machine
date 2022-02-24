@@ -3,6 +3,9 @@
 
 ![](doc/project_liftoff.jpg)
 
+## Micropython on Wifi LoRA 32 (ESP32) & ESP8266
+the code used here runs on Micropython 1.17 and 1.18. For more information about the firmware see http://micropython.org/
+
 ## external projects used:
 
 ### https://github.com/anson-vandoren/esp8266-captive-portal
