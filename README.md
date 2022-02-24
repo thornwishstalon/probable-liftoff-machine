@@ -1,7 +1,7 @@
 # probable-liftoff-machine 🚀
 ## UbiComp WS 2021 - Group 10
 
-![](doc/project_liftoff.png)
+![](doc/project_liftoff.jpg)
 
 ## external projects used:
 
