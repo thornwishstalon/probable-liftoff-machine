@@ -3,8 +3,8 @@
 
 ![](doc/project_liftoff.jpg)
 
-## Micropyhton on ESP32 & ESP8266
-code used works on Micropython 1.17 and 1.18. For more information about the firmware see http://micropython.org/
+## Micropython on Wifi LoRA 32 (ESP32) & ESP8266
+the code used here runs on Micropython 1.17 and 1.18. For more information about the firmware see http://micropython.org/
 
 ## external projects used:
 
