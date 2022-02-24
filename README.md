@@ -29,8 +29,9 @@ props to this project for the wifi setup stuff.
 
 but a lot has been changed in the end. good start point though!
 
-thanks to this emonlib port:
-https://github.com/alisonsalmeida/emonlib-micropython
+### https://github.com/alisonsalmeida/emonlib-micropython
+thanks to this emonlib port
+
 
 ### https://github.com/deviantony/docker-elk
 all elastic, logstash, kibana related. 
